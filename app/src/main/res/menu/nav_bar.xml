@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/bottom_navigation_item_logs"
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home_black_24dp"
         android:title="Main" />
 
     <item
-        android:id="@+id/bottom_navigation_item_progress"
+        android:id="@+id/nav_gallery"
+        android:icon="@drawable/ic_photo_library_black_24dp"
         android:title="Gallery" />
 
 </menu>
