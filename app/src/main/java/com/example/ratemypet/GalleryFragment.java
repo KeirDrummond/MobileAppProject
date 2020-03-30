@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -30,31 +32,33 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public class GalleryFragment extends Fragment {
 
-    JSONObject jsonObject;
-    JsonObjectRequest jsonObjectRequest;
+    private RecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         GetJSON();
-        //FakeTable();
-        return inflater.inflate(R.layout.fragment_gallery, container, false);
+        View view = inflater.inflate(R.layout.fragment_gallery, container, false);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycleitems);
+
+        return view;
     }
 
     private void GetJSON() {
         RequestQueue queue = Volley.newRequestQueue(this.getContext());
-        String url = "https://dog.ceo/api/breeds/image/random";
+        String url = "https://dog.ceo/api/breeds/image/random/4";
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        jsonObject = response;
-                        FakeTable();
+                        PopulateTable(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -67,7 +71,7 @@ public class GalleryFragment extends Fragment {
         queue.add(jsonObjectRequest);
     }
 
-    private void FakeTable() {
+    /*private void FakeTable() {
         try {
             String imageurl = jsonObject.getString("message");
             Log.d("myTag", imageurl);
@@ -78,18 +82,22 @@ public class GalleryFragment extends Fragment {
         catch (JSONException e) {
             // Hello
         }
-    }
+    }*/
 
-    private void PopulateTable() {
-        GetJSON();
-        /*for (int i=0; i < jsonArray.length(); i++)
-        {
-            try {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+    private void PopulateTable(JSONObject jsonObject) {
+        ArrayList<GalleryItem> items = new ArrayList<>();
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("message");
+            for (int i = 0; i < jsonArray.length(); i++)
+            {
+                String imageURL = jsonArray.get(i).toString();
+                items.add(new GalleryItem(imageURL, imageURL));
             }
-            catch (JSONException e) {
-                // Hello
-            }
-        }*/
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(items, this.getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 }
