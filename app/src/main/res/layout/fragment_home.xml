@@ -5,6 +5,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/button"
         android:layout_centerInParent="true"
         android:text="Rate some pets"
         android:textSize="30sp"/>
