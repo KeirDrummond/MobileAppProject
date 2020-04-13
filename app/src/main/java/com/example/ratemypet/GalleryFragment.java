@@ -71,19 +71,6 @@ public class GalleryFragment extends Fragment {
         queue.add(jsonObjectRequest);
     }
 
-    /*private void FakeTable() {
-        try {
-            String imageurl = jsonObject.getString("message");
-            Log.d("myTag", imageurl);
-            ImageView img;
-            img = getView().findViewById(R.id.imageViewMeow);
-            Picasso.get().load(imageurl).into(img);
-        }
-        catch (JSONException e) {
-            // Hello
-        }
-    }*/
-
     private void PopulateTable(JSONObject jsonObject) {
         ArrayList<GalleryItem> items = new ArrayList<>();
         try {
