@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 public class HomeFragment extends Fragment {
 
     @Nullable
@@ -30,8 +33,17 @@ public class HomeFragment extends Fragment {
     }
 
     public void OpenItemActivity() {
-        Intent intent = new Intent(this.getContext(), ItemViewActivity.class);
-        startActivity(intent);
+        ItemFinder.getInstance().GetRandomItemList(5, new ListListener<GalleryItem>() {
+            @Override
+            public void getResult(ArrayList<GalleryItem> objectList) {
+                Intent intent = new Intent(getContext(), ItemViewActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("itemList", (Serializable)objectList);
+                intent.putExtra("itemList", bundle);
+
+                startActivity(intent);
+            }
+        });
     }
 
 }

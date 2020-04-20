@@ -1,5 +1,5 @@
 package com.example.ratemypet;
 
-public interface MyListener<T> {
+public interface SingleListener<T> {
     void getResult(T object);
 }

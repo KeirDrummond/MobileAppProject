@@ -44,7 +44,41 @@ public class ItemFinder {
         return instance;
     }
 
-    public void GetRandomItem(final MyListener<GalleryItem> listener) {
+    public void GetRandomItemList(int size, final ListListener<GalleryItem> listener) {
+        String url = "https://dog.ceo/api/breeds/image/random/";
+        String extra = Integer.toString(size);
+        url = url + extra;
+
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("message");
+                            ArrayList<GalleryItem> itemList = new ArrayList<GalleryItem>();
+                            for (int i = 0; i < jsonArray.length(); i++)
+                            {
+                                String url = jsonArray.get(i).toString();
+                                GalleryItem item = new GalleryItem("title", url);
+                                itemList.add(item);
+                            }
+                            listener.getResult(itemList);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Everybody panic
+                Log.d("myTag", error.toString());
+            }
+        });
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 1, 1.0f));
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    public void GetRandomItem(final SingleListener<GalleryItem> listener) {
         String url = "https://dog.ceo/api/breeds/image/random";
 
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -68,8 +102,6 @@ public class ItemFinder {
         });
         jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 1, 1.0f));
         requestQueue.add(jsonObjectRequest);
-
-        GalleryItem galleryItem = new GalleryItem("title", "url");
     }
 
 }

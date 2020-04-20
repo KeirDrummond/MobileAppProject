@@ -1,6 +1,8 @@
 package com.example.ratemypet;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
 
-    private ArrayList<GalleryItem> items = new ArrayList<>();
+    private ArrayList<GalleryItem> items;
     private Context context;
 
     public RecyclerViewAdapter(ArrayList<GalleryItem> items, Context context) {
@@ -36,8 +39,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        //Log.d("myTag", items.get(position).title);
-
         holder.textView.setText(items.get(position).title);
         Picasso.get().load(items.get(position).imageURL).into(holder.imageView);
     }
@@ -47,7 +48,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return items.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textView;
         ImageView imageView;
@@ -58,6 +59,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textView = itemView.findViewById(R.id.title);
             imageView = itemView.findViewById(R.id.thumbnail);
             linearLayout = itemView.findViewById(R.id.linearLayout);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(context, ItemViewActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("item", (Serializable)items.get(getAdapterPosition()));
+            intent.putExtra("item", bundle);
+
+            context.startActivity(intent);
         }
     }
 
