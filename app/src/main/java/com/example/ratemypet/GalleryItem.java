@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 
 import com.squareup.picasso.Picasso;
 
-public class GalleryItem {
+import java.io.Serializable;
+
+public class GalleryItem implements Serializable {
 
     public String title = "";
     public String imageURL = "";

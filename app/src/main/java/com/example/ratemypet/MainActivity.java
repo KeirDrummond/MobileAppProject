@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ItemFinder.getInstance(this);
+
         setContentView(R.layout.activity_main);
 
         BottomNavigationView navBar;
@@ -26,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            //return false;
             Fragment selectedFragment = null;
 
             switch (menuItem.getItemId()) {
