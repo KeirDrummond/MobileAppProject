@@ -1,4 +1,4 @@
-package com.example.ratemypet;
+package com.keir.ratemypet;
 
 import android.content.Intent;
 import android.os.Bundle;

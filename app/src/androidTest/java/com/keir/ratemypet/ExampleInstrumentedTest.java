@@ -1,4 +1,4 @@
-package com.example.ratemypet;
+package com.keir.ratemypet;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;

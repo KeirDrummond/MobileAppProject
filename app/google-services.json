@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "501260860676",
+    "firebase_url": "https://ci360ratemypet.firebaseio.com",
+    "project_id": "ci360ratemypet",
+    "storage_bucket": "ci360ratemypet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501260860676:android:ce46bf5a9cd4d1d037e451",
+        "android_client_info": {
+          "package_name": "com.keir.ratemypet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "501260860676-es0j152bl5lqur9he54oe4476gss6953.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcBNkVnKyNjrZSALbZiHvxv66UKPDnFrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "501260860676-es0j152bl5lqur9he54oe4476gss6953.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

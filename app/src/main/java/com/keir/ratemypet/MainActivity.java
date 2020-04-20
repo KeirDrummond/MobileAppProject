@@ -1,4 +1,4 @@
-package com.example.ratemypet;
+package com.keir.ratemypet;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

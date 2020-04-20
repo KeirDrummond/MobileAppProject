@@ -1,12 +1,4 @@
-package com.example.ratemypet;
-
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-
-import androidx.annotation.Nullable;
-
-import com.squareup.picasso.Picasso;
+package com.keir.ratemypet;
 
 import java.io.Serializable;
 

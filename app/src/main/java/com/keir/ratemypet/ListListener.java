@@ -1,4 +1,4 @@
-package com.example.ratemypet;
+package com.keir.ratemypet;
 
 import java.util.ArrayList;
 
