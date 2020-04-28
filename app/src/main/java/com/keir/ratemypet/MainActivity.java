@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         navBar = (BottomNavigationView) findViewById(R.id.NavBar);
         navBar.setOnNavigationItemSelectedListener(navListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SignIn()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -38,8 +38,14 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new GalleryFragment();
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            ChangeFragment(selectedFragment);
             return true;
         }
     };
+
+    public void ChangeFragment(Fragment fragment)
+    {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
 }
