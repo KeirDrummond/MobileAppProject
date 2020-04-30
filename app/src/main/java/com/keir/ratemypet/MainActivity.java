@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+
+    BottomNavigationView navBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navBar;
         navBar = (BottomNavigationView) findViewById(R.id.NavBar);
         navBar.setOnNavigationItemSelectedListener(navListener);
 
@@ -46,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
     public void ChangeFragment(Fragment fragment)
     {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
+    public void HideTaskbar()
+    {
+        navBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void ShowTaskbar()
+    {
+        navBar.setVisibility(View.VISIBLE);
     }
 
 }

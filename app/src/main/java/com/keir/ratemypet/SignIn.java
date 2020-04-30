@@ -25,8 +25,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,8 +46,6 @@ public class SignIn extends Fragment {
         if (firebaseUser != null)
         {
             CheckForUser(firebaseUser);
-
-            //((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
         }
     }
 
@@ -87,6 +83,8 @@ public class SignIn extends Fragment {
                     {
                         Log.d("muhtag", "Does exist!");
                     }
+
+                    ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                 }
                 else
                 {
@@ -100,6 +98,8 @@ public class SignIn extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        ((MainActivity) getActivity()).HideTaskbar();
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
