@@ -26,7 +26,7 @@ public class GalleryFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleitems);
 
-        ItemFinder.getInstance().GetRandomItemList(20, new ListListener<GalleryItem>() {
+        ItemFinder.getInstance().GetRandomItemList(3, new ListListener<GalleryItem>() {
             @Override
             public void getResult(ArrayList<GalleryItem> itemList) {
                 PopulateTable(itemList);

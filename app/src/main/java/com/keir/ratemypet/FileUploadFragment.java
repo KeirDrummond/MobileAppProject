@@ -3,6 +3,7 @@ package com.keir.ratemypet;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -31,16 +29,12 @@ public class FileUploadFragment extends Fragment {
 
     Uri selectedFile;
 
-    private StorageReference storageReference;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fileupload, container, false);
 
         ((MainActivity) getActivity()).HideTaskbar();
-
-        storageReference = FirebaseStorage.getInstance().getReference();
 
         Button fileSelectBtn = view.findViewById(R.id.fileselectbtn);
         Button uploadBtn = view.findViewById(R.id.uploadbtn);
@@ -55,9 +49,13 @@ public class FileUploadFragment extends Fragment {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UploadImage(selectedFile);
+                if (ValidateItem()) { UploadImage(selectedFile); }
             }
         });
+
+        String user = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+        Log.d("muhtag", user);
 
         return view;
     }
@@ -84,36 +82,65 @@ public class FileUploadFragment extends Fragment {
     {
         if (file == null) { return false; }
 
-        final HashMap<String, Object> details = GetUploadDetails();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String uuid = UUID.randomUUID().toString();
 
-        final String rnduuid = UUID.randomUUID().toString();
-        final StorageReference imageRef = storageReference.child("images/" + rnduuid + ".jpg");
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        final StorageReference imageReference = storageReference.child("images/" + userID + "/" + uuid);
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        UploadTask uploadTask = imageRef.putFile(file);
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                return imageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                db.collection("images").document(rnduuid).set(details);
-                db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("uploads").document(rnduuid).set(details);
-            }
-        });
+        UploadToStorage(file, imageReference);
 
         return true;
     }
 
-    private HashMap<String, Object> GetUploadDetails()
-    {
-        HashMap<String, Object> details = new HashMap<>();
+    private void UploadToStorage(Uri file, final StorageReference imageReference) {
+        final UploadTask uploadTask = imageReference.putFile(file);
 
-        return details;
+        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                return imageReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Uri downloadUri = task.getResult();
+                String url = downloadUri.toString();
+
+                UploadToDatabase(url);
+            }
+        });
+
+    }
+
+    private void UploadToDatabase(String url) {
+        GalleryItem item = GetUploadDetails(url);
+
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        String id = db.collection("images").document().getId();
+
+        db.collection("images").document(id).set(item);
+
+        HashMap<String, Object> object = new HashMap<>();
+        object.put("upload", id);
+        db.collection("users").document(userID).collection("uploads").document().set(object);
+    }
+
+    private GalleryItem GetUploadDetails(String url)
+    {
+        String title = "";
+        String imageURL = url;
+
+        GalleryItem newItem = new GalleryItem(title, imageURL);
+
+        return newItem;
+    }
+
+    private boolean ValidateItem() {
+        return true;
     }
 
 }

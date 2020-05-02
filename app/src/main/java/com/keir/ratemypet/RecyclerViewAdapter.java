@@ -38,8 +38,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textView.setText(items.get(position).title);
-        Picasso.get().load(items.get(position).imageURL).into(holder.imageView);
+        holder.textView.setText(items.get(position).getTitle());
+        Picasso.get().load(items.get(position).getImageURL()).into(holder.imageView);
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +53,7 @@ public class SignIn extends Fragment {
     private void CreateUser(FirebaseUser fbUser) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("Name", fbUser.getDisplayName());
-        user.put("Email", fbUser.getEmail());
+        final UserAccount user = new UserAccount(fbUser);
 
         db.collection("users").document(fbUser.getUid())
                 .set(user)
@@ -62,6 +61,8 @@ public class SignIn extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Success
+                        UserAccount.setUserAccount(user);
+                        ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                     }
                 });
     }
@@ -81,10 +82,10 @@ public class SignIn extends Fragment {
                     }
                     else
                     {
+                        UserAccount.setUserAccount(new UserAccount(firebaseUser));
+                        ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                         Log.d("muhtag", "Does exist!");
                     }
-
-                    ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                 }
                 else
                 {

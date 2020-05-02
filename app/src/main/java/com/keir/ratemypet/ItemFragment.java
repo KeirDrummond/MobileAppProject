@@ -36,8 +36,8 @@ public class ItemFragment extends Fragment {
         TextView textView = view.findViewById(R.id.title);
         ImageView imageView = view.findViewById(R.id.image);
 
-        textView.setText(item.title);
-        Picasso.get().load(item.imageURL).into(imageView);
+        textView.setText(item.getTitle());
+        Picasso.get().load(item.getImageURL()).into(imageView);
 
         return view;
     }
