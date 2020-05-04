@@ -61,7 +61,7 @@ public class SignIn extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         //Success
-                        UserAccount.setUserAccount(user);
+                        new Session(user);
                         ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                     }
                 });
@@ -82,7 +82,8 @@ public class SignIn extends Fragment {
                     }
                     else
                     {
-                        UserAccount.setUserAccount(new UserAccount(firebaseUser));
+                        UserAccount user = new UserAccount(firebaseUser);
+                        new Session(user);
                         ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
                         Log.d("muhtag", "Does exist!");
                     }

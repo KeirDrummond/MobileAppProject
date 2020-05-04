@@ -3,33 +3,45 @@ package com.keir.ratemypet;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GalleryItem implements Serializable {
 
+    private String id = "";
     private String title = "";
     private String imageURL = "";
 
-    public GalleryItem(DocumentSnapshot doc)
-    {
-        Map<String, Object> map = Validate(doc.getData());
-        title = map.get("title").toString();
-        imageURL = map.get("url").toString();
+    private String uploaderId;
+    private String uploadDate;
+    private String uploadTime;
+
+    private long cuteScore;
+    private long funnyScore;
+    private long interestingScore;
+    private long happyScore;
+    private long surprisingScore;
+
+    private long totalScore;
+
+    public GalleryItem() {
     }
 
-    public GalleryItem(String title, String imageURL) {
+    public GalleryItem(String id, String title, String imageURL, String uploaderId, String uploadDate, String uploadTime) {
+        this.id = id;
         this.title = title;
         this.imageURL = imageURL;
+        this.uploaderId = uploaderId;
+        this.uploadDate = uploadDate;
+        this.uploadTime = uploadTime;
+
+        cuteScore = 0;
+        funnyScore = 0;
+        interestingScore = 0;
+        happyScore = 0;
+        surprisingScore = 0;
+        totalScore = 0;
     }
 
-    private Map<String, Object> Validate(Map<String, Object> map) {
-        Map<String, Object> newMap = map;
-        if (!newMap.containsKey("title")) { newMap.put("title", "Title"); }
-        if (!newMap.containsKey("url")) { newMap.put("url", ""); }
-
-        return newMap;
-    }
+    public String getId() { return id; }
 
     public String getTitle() {
         return title;
@@ -37,5 +49,33 @@ public class GalleryItem implements Serializable {
 
     public String getImageURL() {
         return imageURL;
+    }
+
+    public String getUploaderId() {
+        return uploaderId;
+    }
+
+    public long getCuteScore() {
+        return cuteScore;
+    }
+
+    public long getFunnyScore() {
+        return funnyScore;
+    }
+
+    public long getInterestingScore() {
+        return interestingScore;
+    }
+
+    public long getHappyScore() {
+        return happyScore;
+    }
+
+    public long getSurprisingScore() {
+        return surprisingScore;
+    }
+
+    public long getTotalScore() {
+        return totalScore;
     }
 }

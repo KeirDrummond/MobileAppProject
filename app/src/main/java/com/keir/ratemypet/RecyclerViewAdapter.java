@@ -13,9 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
@@ -39,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(items.get(position).getTitle());
-        Picasso.get().load(items.get(position).getImageURL()).into(holder.imageView);
+        Glide.with(context).load(items.get(position).getImageURL()).into(holder.imageView);
     }
 
     @Override
@@ -63,12 +64,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, ItemViewActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("item", (Serializable)items.get(getAdapterPosition()));
-            intent.putExtra("item", bundle);
+            final ArrayList<GalleryItem> item = new ArrayList<>();
+            item.add(items.get(getAdapterPosition()));
 
-            context.startActivity(intent);
+            ItemFinder.getInstance().GetMyRatings(item, new RatingListener() {
+                @Override
+                public void getResult(ArrayList<Rating> ratings) {
+                    Intent intent = new Intent(context, ItemViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("items", item);
+                    bundle.putSerializable("ratings", ratings);
+                    intent.putExtra("items", bundle);
+
+                    context.startActivity(intent);
+                }
+            });
+
+
         }
     }
 

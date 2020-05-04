@@ -4,20 +4,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserAccount {
 
-    private static UserAccount userAccount = null;
-
     private String userID;
     private String displayName;
     private String email;
     private int level;
-
-    private UserAccount() {
-
-    }
-
-    public static synchronized UserAccount getUserAccount() {
-        return userAccount;
-    }
 
     public UserAccount(FirebaseUser user)
     {
@@ -27,7 +17,19 @@ public class UserAccount {
         level = 1;
     }
 
-    public static void setUserAccount(UserAccount userAccount) {
-        UserAccount.userAccount = userAccount;
+    public String getUserID() {
+        return userID;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

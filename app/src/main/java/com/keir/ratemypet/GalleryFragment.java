@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 
 public class GalleryFragment extends Fragment {
@@ -26,10 +29,12 @@ public class GalleryFragment extends Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleitems);
 
-        ItemFinder.getInstance().GetRandomItemList(3, new ListListener<GalleryItem>() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        Query query = firestore.collection("images");
+        ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
             @Override
-            public void getResult(ArrayList<GalleryItem> itemList) {
-                PopulateTable(itemList);
+            public void getResult(ArrayList<GalleryItem> items) {
+                PopulateTable(items);
             }
         });
 

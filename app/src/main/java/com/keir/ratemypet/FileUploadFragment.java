@@ -114,13 +114,12 @@ public class FileUploadFragment extends Fragment {
     }
 
     private void UploadToDatabase(String url) {
-        GalleryItem item = GetUploadDetails(url);
-
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String userID = Session.getInstance().getCurrentUser().getUserID();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         String id = db.collection("images").document().getId();
+
+        GalleryItem item = CreateItem(id, url);
 
         db.collection("images").document(id).set(item);
 
@@ -129,12 +128,17 @@ public class FileUploadFragment extends Fragment {
         db.collection("users").document(userID).collection("uploads").document().set(object);
     }
 
-    private GalleryItem GetUploadDetails(String url)
+    private GalleryItem CreateItem(String id, String url)
     {
         String title = "";
         String imageURL = url;
 
-        GalleryItem newItem = new GalleryItem(title, imageURL);
+        String userId = Session.getInstance().getCurrentUser().getUserID();
+
+        String date = "";
+        String time = "";
+
+        GalleryItem newItem = new GalleryItem(id, title, imageURL, userId, date, time);
 
         return newItem;
     }

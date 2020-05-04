@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
@@ -43,15 +42,18 @@ public class HomeFragment extends Fragment {
     }
 
     public void OpenItemActivity() {
-        ItemFinder.getInstance().GetRandomItemList(5, new ListListener<GalleryItem>() {
+        ItemFinder.getInstance().GetRandomItemList(5, new RandomListener() {
             @Override
-            public void getResult(ArrayList<GalleryItem> objectList) {
-                Intent intent = new Intent(getContext(), ItemViewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("itemList", (Serializable)objectList);
-                intent.putExtra("itemList", bundle);
+            public void getResult(ArrayList<GalleryItem> items, ArrayList<Rating> ratings) {
+                if (items.size() != 0) {
+                    Intent intent = new Intent(getContext(), ItemViewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("items", items);
+                    bundle.putSerializable("ratings", ratings);
+                    intent.putExtra("items", bundle);
 
-                startActivity(intent);
+                    startActivity(intent);
+                }
             }
         });
     }
