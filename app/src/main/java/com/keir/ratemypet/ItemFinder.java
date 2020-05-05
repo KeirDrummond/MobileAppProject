@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -52,23 +53,24 @@ public class ItemFinder {
     }
 
     public void GetMyRatings(final ArrayList<GalleryItem> items, final RatingListener listener) {
-        firestore.collection("users")
+        final CollectionReference ratingRef = firestore.collection("users")
                 .document(Session.getInstance().getCurrentUser().getUserID())
-                .collection("ratings")
-                .get()
+                .collection("ratings");
+        ratingRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         final ArrayList<Rating> ratings = new ArrayList<>();
                         for (int i = 0; i < items.size(); i++) {
+                            String ratingId = ratingRef.document().getId();
                             String id = items.get(i).getId();
                             for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                                if (doc.get("id") == id) {
+                                if (doc.get("uploadId") == id) {
                                     ratings.add(doc.toObject(Rating.class));
                                     break;
                                 }
                             }
-                            ratings.add(new Rating());
+                            ratings.add(new Rating(ratingId, id));
                         }
                         listener.getResult(ratings);
                     }
@@ -96,15 +98,16 @@ public class ItemFinder {
                                 }
                             }
 
-                            firestore.collection("users")
+                            final CollectionReference ratingRef = firestore.collection("users")
                                     .document(Session.getInstance().getCurrentUser().getUserID())
-                                    .collection("ratings")
-                                    .get()
+                                    .collection("ratings");
+                                    ratingRef.get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if (task.isSuccessful()) {
                                                 for (int i = 0; i < rndList.size(); i++) {
+                                                    String ratingId = ratingRef.document().getId();
                                                     String id = rndList.get(i).getId();
                                                     for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                                                         if (doc.get("id") == id) {
@@ -112,7 +115,7 @@ public class ItemFinder {
                                                             break;
                                                         }
                                                     }
-                                                    ratings.add(new Rating());
+                                                    ratings.add(new Rating(ratingId, id));
                                                 }
                                                 listener.getResult(rndList, ratings);
                                             }
