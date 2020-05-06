@@ -1,8 +1,9 @@
 package com.keir.ratemypet;
 
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class GalleryItem implements Serializable {
 
@@ -11,8 +12,7 @@ public class GalleryItem implements Serializable {
     private String imageURL = "";
 
     private String uploaderId;
-    private String uploadDate;
-    private String uploadTime;
+    private Timestamp timestamp;
 
     private long cuteScore;
     private long funnyScore;
@@ -25,13 +25,12 @@ public class GalleryItem implements Serializable {
     public GalleryItem() {
     }
 
-    public GalleryItem(String id, String title, String imageURL, String uploaderId, String uploadDate, String uploadTime) {
+    public GalleryItem(String id, String title, String imageURL, String uploaderId, Timestamp timestamp) {
         this.id = id;
         this.title = title;
         this.imageURL = imageURL;
         this.uploaderId = uploaderId;
-        this.uploadDate = uploadDate;
-        this.uploadTime = uploadTime;
+        this.timestamp = timestamp;
 
         cuteScore = 0;
         funnyScore = 0;

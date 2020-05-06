@@ -1,13 +1,19 @@
 package com.keir.ratemypet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,28 +22,38 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class FileUploadFragment extends Fragment {
 
     Uri selectedFile;
+    ImageView imagePreview;
+    EditText titleInputBox;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fileupload, container, false);
 
-        ((MainActivity) getActivity()).HideTaskbar();
+        ((MainActivity) getActivity()).ShowTaskbar();
 
-        Button fileSelectBtn = view.findViewById(R.id.fileselectbtn);
-        Button uploadBtn = view.findViewById(R.id.uploadbtn);
+        Button fileSelectBtn = view.findViewById(R.id.fileSelectBtn);
+        Button uploadBtn = view.findViewById(R.id.uploadBtn);
+        imagePreview = view.findViewById(R.id.imagePreview);
+        titleInputBox = view.findViewById(R.id.titleInputBox);
 
         fileSelectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,27 +90,75 @@ public class FileUploadFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 42 && resultCode == getActivity().RESULT_OK)
         {
+            int rotation = getImageRotation(data.getData());
+            Bitmap bitmap = intoBitmap(data.getData());
+            Bitmap newBitmap = rotateBitmap(bitmap, rotation);
+
             selectedFile = data.getData();
+            imagePreview.setImageBitmap(newBitmap);
         }
     }
 
-    private boolean UploadImage(Uri file)
+    private boolean UploadImage(Uri image)
     {
-        if (file == null) { return false; }
+        if (image == null) { return false; }
 
+        UploadToStorage(image);
+
+        return true;
+    }
+
+    private int getImageRotation(Uri uri) {
+        int rotation = 0;
+        try {
+            InputStream in = getContext().getContentResolver().openInputStream(uri);
+            ExifInterface exifInterface = new ExifInterface(in);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotation = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotation = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotation = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return rotation;
+    }
+
+    private Bitmap intoBitmap(Uri file) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    private Bitmap rotateBitmap(Bitmap bitmap, int rotation) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+        Bitmap newBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        return newBitmap;
+    }
+
+    private void UploadToStorage(Uri image) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String uuid = UUID.randomUUID().toString();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         final StorageReference imageReference = storageReference.child("images/" + userID + "/" + uuid);
 
-        UploadToStorage(file, imageReference);
-
-        return true;
-    }
-
-    private void UploadToStorage(Uri file, final StorageReference imageReference) {
-        final UploadTask uploadTask = imageReference.putFile(file);
+        final UploadTask uploadTask = imageReference.putFile(image);
 
         uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -114,36 +178,43 @@ public class FileUploadFragment extends Fragment {
     }
 
     private void UploadToDatabase(String url) {
-        String userID = Session.getInstance().getCurrentUser().getUserID();
+        String userId = Session.getInstance().getCurrentUser().getUserID();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String id = db.collection("images").document().getId();
-
         GalleryItem item = CreateItem(id, url);
 
-        db.collection("images").document(id).set(item);
+        WriteBatch batch = db.batch();
+
+        DocumentReference imageRef = db.collection("images").document(id);
+        batch.set(imageRef, item);
 
         HashMap<String, Object> object = new HashMap<>();
         object.put("upload", id);
-        db.collection("users").document(userID).collection("uploads").document().set(object);
+        DocumentReference userUploadRef = db.collection("users").document(userId).collection("uploads").document();
+        batch.set(userUploadRef, object);
+
+        batch.commit();
     }
 
     private GalleryItem CreateItem(String id, String url)
     {
-        String title = "";
+        String title = titleInputBox.getText().toString();
         String imageURL = url;
 
         String userId = Session.getInstance().getCurrentUser().getUserID();
 
-        String date = "";
-        String time = "";
+        Date date = new Date();
+        Timestamp timestamp = new Timestamp(date);
 
-        GalleryItem newItem = new GalleryItem(id, title, imageURL, userId, date, time);
+        GalleryItem newItem = new GalleryItem(id, title, imageURL, userId, timestamp);
 
         return newItem;
     }
 
     private boolean ValidateItem() {
+        if (titleInputBox.getText().toString() == "") { return false; }
+
         return true;
     }
 
