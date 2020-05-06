@@ -3,15 +3,21 @@ package com.keir.ratemypet;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ItemFinder {
@@ -52,29 +58,42 @@ public class ItemFinder {
                 });
     }
 
-    public void GetMyRatings(final ArrayList<GalleryItem> items, final RatingListener listener) {
-        final CollectionReference ratingRef = firestore.collection("users")
+    public void GetItem(final GalleryItem item, final SingleListener listener) {
+        final DocumentReference itemRef = firestore.collection("images").
+                document(item.getId());
+        final CollectionReference ratingsReference = firestore.collection("users")
                 .document(Session.getInstance().getCurrentUser().getUserID())
                 .collection("ratings");
-        ratingRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        itemRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                final GalleryItem newItem = documentSnapshot.toObject(GalleryItem.class);
+
+                ratingsReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        final ArrayList<Rating> ratings = new ArrayList<>();
-                        for (int i = 0; i < items.size(); i++) {
-                            String ratingId = ratingRef.document().getId();
-                            String id = items.get(i).getId();
-                            for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                                if (doc.get("uploadId") == id) {
-                                    ratings.add(doc.toObject(Rating.class));
-                                    break;
-                                }
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        Rating rating;
+                        String uploadId = item.getId();
+                        String ratingId = ratingsReference.document().getId();
+                        rating = new Rating(ratingId, uploadId);
+
+                        for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                            String ratingUId = doc.get("uploadId").toString();
+                            if (ratingUId.equals(uploadId)) {
+                                rating = (doc.toObject(Rating.class));
+                                break;
                             }
-                            ratings.add(new Rating(ratingId, id));
                         }
-                        listener.getResult(ratings);
+                        ArrayList<GalleryItem> aItem = new ArrayList();
+                        aItem.add(newItem);
+                        ArrayList<Rating> aRating = new ArrayList();
+                        aRating.add(rating);
+                        listener.getResult(aItem, aRating);
                     }
                 });
+            }
+        });
     }
 
     public void GetRandomItemList(final int listSize, final RandomListener listener) {

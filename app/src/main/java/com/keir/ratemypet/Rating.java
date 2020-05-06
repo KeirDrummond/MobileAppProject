@@ -21,6 +21,17 @@ public class Rating implements Serializable {
         this.uploadId = uploadId;
     }
 
+    public Rating(Rating otherRating) {
+        this.ratingId = otherRating.ratingId;
+        this.uploadId = otherRating.uploadId;
+
+        this.cuteScore = otherRating.cuteScore;
+        this.funnyScore = otherRating.funnyScore;
+        this.interestingScore = otherRating.interestingScore;
+        this.happyScore = otherRating.happyScore;
+        this.surprisingScore = otherRating.surprisingScore;
+    }
+
     public String getRatingId() { return ratingId; }
     public String getUploadId() { return uploadId; }
 

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -64,16 +63,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
-            final ArrayList<GalleryItem> item = new ArrayList<>();
-            item.add(items.get(getAdapterPosition()));
-
-            ItemFinder.getInstance().GetMyRatings(item, new RatingListener() {
+            ItemFinder.getInstance().GetItem(items.get(getAdapterPosition()), new SingleListener() {
                 @Override
-                public void getResult(ArrayList<Rating> ratings) {
+                public void getResult(ArrayList<GalleryItem> item, ArrayList<Rating> rating) {
                     Intent intent = new Intent(context, ItemViewActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("items", item);
-                    bundle.putSerializable("ratings", ratings);
+                    bundle.putSerializable("ratings", rating);
                     intent.putExtra("items", bundle);
 
                     context.startActivity(intent);
