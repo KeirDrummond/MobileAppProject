@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_gallery:
                     selectedFragment = new GalleryFragment();
                     break;
+                case R.id.nav_profile:
+                    selectedFragment = ProfileFragment.newInstance(Session.getInstance().getCurrentUser());
+                    break;
             }
             ChangeFragment(selectedFragment);
             return true;
@@ -48,6 +53,15 @@ public class MainActivity extends AppCompatActivity {
     public void ChangeFragment(Fragment fragment)
     {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
+    public void UserDisplay(boolean state) {
+        LinearLayout userDisplayLayout = findViewById(R.id.userDisplay);
+        TextView usernameText = findViewById(R.id.username);
+        if (state) {
+            userDisplayLayout.setVisibility(View.VISIBLE);
+            usernameText.setText(Session.getInstance().getCurrentUser().getDisplayName());
+        } else { userDisplayLayout.setVisibility(View.INVISIBLE); }
     }
 
     public void HideTaskbar()

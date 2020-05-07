@@ -50,6 +50,11 @@ public class SignIn extends Fragment {
         }
     }
 
+    private void CompleteSignIn() {
+        ((MainActivity) getActivity()).UserDisplay(true);
+        ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
+    }
+
     private void CreateUser(FirebaseUser fbUser) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -62,7 +67,7 @@ public class SignIn extends Fragment {
                     public void onSuccess(Void aVoid) {
                         //Success
                         new Session(user);
-                        ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
+                        CompleteSignIn();
                     }
                 });
     }
@@ -84,7 +89,7 @@ public class SignIn extends Fragment {
                     {
                         UserAccount user = new UserAccount(firebaseUser);
                         new Session(user);
-                        ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
+                        CompleteSignIn();
                         Log.d("muhtag", "Does exist!");
                     }
                 }

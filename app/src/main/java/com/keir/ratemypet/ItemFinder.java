@@ -17,7 +17,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -160,4 +159,19 @@ public class ItemFinder {
                     }
                 });
     }
+
+    public void getProfileItems(final UserAccount user, final GalleryItemListener listener) {
+        Query query = firestore.collection("images").whereEqualTo("uploaderId", user.getUserID());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<GalleryItem> items = new ArrayList<>();
+                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                    items.add(doc.toObject(GalleryItem.class));
+                }
+                listener.getResult(items);
+            }
+        });
+    }
+
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ItemViewActivity extends AppCompatActivity {
 
-    ArrayList<ItemFragment> itemFragments;
+    ArrayList<GenericItemFragment> genericItemFragments;
     int currentItem;
 
     @Override
@@ -21,21 +21,21 @@ public class ItemViewActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("items");
         ArrayList<GalleryItem> itemList = (ArrayList<GalleryItem>)bundle.getSerializable("items");
         ArrayList<Rating> ratings = (ArrayList<Rating>)bundle.getSerializable("ratings");
-        itemFragments = new ArrayList<>();
+        genericItemFragments = new ArrayList<>();
 
         for (int i = 0; i < itemList.size(); i++)
         {
-            ItemFragment itemFragment = ItemFragment.newInstance(itemList.get(i), ratings.get(i));
-            itemFragments.add(itemFragment);
+            GenericItemFragment genericItemFragment = GenericItemFragment.newInstance(itemList.get(i), ratings.get(i));
+            genericItemFragments.add(genericItemFragment);
         }
         currentItem = 0;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, itemFragments.get(currentItem)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, genericItemFragments.get(currentItem)).commit();
     }
 
     public void Continue() {
-        if (currentItem + 1 != itemFragments.size()) {
+        if (currentItem + 1 != genericItemFragments.size()) {
             currentItem++;
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, itemFragments.get(currentItem)).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, genericItemFragments.get(currentItem)).commit();
         }
         else {
             finish();

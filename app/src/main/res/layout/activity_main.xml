@@ -6,10 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/userDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="invisible">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:text="Username"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"/>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/userDisplay"
         android:layout_above="@id/NavBar"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

@@ -2,7 +2,9 @@ package com.keir.ratemypet;
 
 import com.google.firebase.auth.FirebaseUser;
 
-public class UserAccount {
+import java.io.Serializable;
+
+public class UserAccount implements Serializable {
 
     private String userID;
     private String displayName;
