@@ -19,6 +19,8 @@ import com.google.firebase.firestore.Transaction;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ItemFinder {
     // Utility class
@@ -48,7 +50,6 @@ public class ItemFinder {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             ArrayList<GalleryItem> items = new ArrayList<>();
-
                             for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                                 items.add(doc.toObject(GalleryItem.class));
                             }
@@ -99,48 +100,63 @@ public class ItemFinder {
     public void GetRandomItemList(final int listSize, final RandomListener listener) {
         firestore.collection("images")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int noOfResults = task.getResult().getDocuments().size();
-                            int size = Math.min(listSize, noOfResults);
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                        int noOfResults = docs.size();
+                        int size = Math.min(listSize, noOfResults);
 
-                            final ArrayList<GalleryItem> rndList = new ArrayList<>();
-                            final ArrayList<Rating> ratings = new ArrayList<>();
+                        final ArrayList<GalleryItem> rndList = new ArrayList<>();
+                        final ArrayList<Rating> ratings = new ArrayList<>();
 
-                            int counter = 0;
-                            while (counter < size) {
-                                if (!rndList.contains(task.getResult().getDocuments().get(counter))) {
-                                    rndList.add(task.getResult().getDocuments().get(counter).toObject(GalleryItem.class));
+                        int counter = 0;
+                        while (counter < size) {
+                            int randomValue = new Random().nextInt(noOfResults);
+                            if (rndList.size() != 0) {
+                                boolean copy = false;
+                                for (GalleryItem item : rndList) {
+                                    String itemId = item.getId();
+                                    String otherItemId = docs.get(randomValue).getId();
+                                    if (itemId.equals(otherItemId)) {
+                                        copy = true;
+                                        break;
+                                    }
+                                }
+                                if (!copy) {
+                                    rndList.add(docs.get(randomValue).toObject(GalleryItem.class));
                                     counter++;
                                 }
+                            } else {
+                                rndList.add(docs.get(randomValue).toObject(GalleryItem.class));
+                                counter++;
                             }
-
-                            final CollectionReference ratingRef = firestore.collection("users")
-                                    .document(Session.getInstance().getCurrentUser().getUserID())
-                                    .collection("ratings");
-                                    ratingRef.get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (int i = 0; i < rndList.size(); i++) {
-                                                    String ratingId = ratingRef.document().getId();
-                                                    String id = rndList.get(i).getId();
-                                                    for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                                                        if (doc.get("id") == id) {
-                                                            ratings.add(doc.toObject(Rating.class));
-                                                            break;
-                                                        }
-                                                    }
-                                                    ratings.add(new Rating(ratingId, id));
-                                                }
-                                                listener.getResult(rndList, ratings);
-                                            }
-                                        }
-                                    });
                         }
+
+                        final CollectionReference ratingRef = firestore.collection("users")
+                                .document(Session.getInstance().getCurrentUser().getUserID())
+                                .collection("ratings");
+                        ratingRef.get()
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        for (int i = 0; i < rndList.size(); i++) {
+                                            String uploadId = rndList.get(i).getId();
+                                            String ratingId = ratingRef.document().getId();
+
+                                            Rating rating = new Rating(ratingId, uploadId);
+                                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                                String ratingUId = doc.get("uploadId").toString();
+                                                if (ratingUId.equals(uploadId)) {
+                                                    rating = doc.toObject(Rating.class);
+                                                    break;
+                                                }
+                                            }
+                                            ratings.add(rating);
+                                        }
+                                        listener.getResult(rndList, ratings);
+                                    }
+                                });
                     }
                 });
     }

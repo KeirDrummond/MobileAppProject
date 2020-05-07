@@ -1,6 +1,5 @@
 package com.keir.ratemypet;
 
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 public class ItemFragment extends Fragment {
@@ -44,17 +37,28 @@ public class ItemFragment extends Fragment {
     Button happyBtn;
     Button surprisingBtn;
 
-    TextView cuteScore;
-    TextView funnyScore;
-    TextView interestingScore;
-    TextView happyScore;
-    TextView surprisingScore;
-    TextView totalScore;
+    long cuteScore;
+    long funnyScore;
+    long interestingScore;
+    long happyScore;
+    long surprisingScore;
+    long totalScore;
+
+    TextView cuteScoreText;
+    TextView funnyScoreText;
+    TextView interestingScoreText;
+    TextView happyScoreText;
+    TextView surprisingScoreText;
+    TextView totalScoreText;
 
     Button continueBtn;
 
     Rating currentRating;
     Rating newRating;
+
+    int firstValue = 8;
+    int secondValue = 5;
+    int thirdValue = 2;
 
     public static ItemFragment newInstance(GalleryItem item, Rating currentRating) {
         ItemFragment fragment = new ItemFragment();
@@ -87,27 +91,31 @@ public class ItemFragment extends Fragment {
         happyRating = view.findViewById(R.id.happyRating);
         surprisingRating = view.findViewById(R.id.surprisingRating);
 
-        UpdateView();
-
         cuteBtn = view.findViewById(R.id.cuteBtn);
         funnyBtn = view.findViewById(R.id.funnyBtn);
         interestingBtn = view.findViewById(R.id.interestingBtn);
         happyBtn = view.findViewById(R.id.happyBtn);
         surprisingBtn = view.findViewById(R.id.surprisingBtn);
 
-        cuteScore = view.findViewById(R.id.cuteScore);
-        funnyScore = view.findViewById(R.id.funnyScore);
-        interestingScore = view.findViewById(R.id.interestingScore);
-        happyScore = view.findViewById(R.id.happyScore);
-        surprisingScore = view.findViewById(R.id.surprisingScore);
-        totalScore = view.findViewById(R.id.totalScore);
+        cuteScoreText = view.findViewById(R.id.cuteScore);
+        funnyScoreText = view.findViewById(R.id.funnyScore);
+        interestingScoreText = view.findViewById(R.id.interestingScore);
+        happyScoreText = view.findViewById(R.id.happyScore);
+        surprisingScoreText = view.findViewById(R.id.surprisingScore);
+        totalScoreText = view.findViewById(R.id.totalScore);
 
-        cuteScore.setText(String.valueOf(item.getCuteScore()));
-        funnyScore.setText(String.valueOf(item.getFunnyScore()));
-        interestingScore.setText(String.valueOf(item.getInterestingScore()));
-        happyScore.setText(String.valueOf(item.getHappyScore()));
-        surprisingScore.setText(String.valueOf(item.getSurprisingScore()));
-        totalScore.setText(String.valueOf(item.getTotalScore()));
+        cuteScore = item.getCuteScore();
+        funnyScore = item.getFunnyScore();
+        interestingScore = item.getInterestingScore();
+        happyScore = item.getHappyScore();
+        surprisingScore = item.getSurprisingScore();
+        totalScore = item.getTotalScore();
+
+        if (currentRating.cuteScore == 1) { cuteScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.cuteScore == 2) { cuteScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.cuteScore == 3) { cuteScore -= thirdValue; totalScore -= thirdValue * 2; }
+        if (currentRating.funnyScore == 1) { funnyScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.funnyScore == 2) { funnyScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.funnyScore == 3) { funnyScore -= thirdValue; totalScore -= thirdValue * 2; }
+        if (currentRating.interestingScore == 1) { interestingScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.interestingScore == 2) { interestingScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.interestingScore == 3) { interestingScore -= thirdValue; totalScore -= thirdValue * 2; }
+        if (currentRating.happyScore == 1) { happyScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.happyScore == 2) { happyScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.happyScore == 3) { happyScore -= thirdValue; totalScore -= thirdValue * 2; }
+        if (currentRating.surprisingScore == 1) { surprisingScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.surprisingScore == 2) { surprisingScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.surprisingScore == 3) { surprisingScore -= thirdValue; totalScore -= thirdValue * 2; }
 
         continueBtn = view.findViewById(R.id.continueBtn);
 
@@ -259,21 +267,127 @@ public class ItemFragment extends Fragment {
             }
         });
 
+        UpdateView();
+
         return view;
     }
 
     private void UpdateView() {
-        if (newRating.cuteScore == 1)
-        { cuteRating.setText("1st"); }
-        else if (newRating.cuteScore == 2)
-        { cuteRating.setText("2nd"); }
-        else if (newRating.cuteScore == 3)
-        { cuteRating.setText("3rd"); } else
-            { cuteRating.setText("-"); }
-        if (newRating.funnyScore == 1) { funnyRating.setText("1st"); } else if (newRating.funnyScore == 2) { funnyRating.setText("2nd"); } else if (newRating.funnyScore == 3) { funnyRating.setText("3rd"); } else { funnyRating.setText("-"); }
-        if (newRating.interestingScore == 1) { interestingRating.setText("1st"); } else if (newRating.interestingScore == 2) { interestingRating.setText("2nd"); } else if (newRating.interestingScore == 3) { interestingRating.setText("3rd"); } else { interestingRating.setText("-"); }
-        if (newRating.happyScore == 1) { happyRating.setText("1st"); } else if (newRating.happyScore == 2) { happyRating.setText("2nd"); } else if (newRating.happyScore == 3) { happyRating.setText("3rd"); } else { happyRating.setText("-"); }
-        if (newRating.surprisingScore == 1) { surprisingRating.setText("1st"); } else if (newRating.surprisingScore == 2) { surprisingRating.setText("2nd"); } else if (newRating.surprisingScore == 3) { surprisingRating.setText("3rd"); } else { surprisingRating.setText("-"); }
+
+        long newTotalScore = totalScore;
+
+        switch((int)newRating.cuteScore)
+        {
+            case 1:
+                cuteRating.setText("1st");
+                cuteScoreText.setText(String.valueOf(cuteScore + firstValue));
+                newTotalScore += firstValue * 2;
+                break;
+            case 2:
+                cuteRating.setText("2nd");
+                cuteScoreText.setText(String.valueOf(cuteScore + secondValue));
+                newTotalScore += secondValue * 2;
+                break;
+            case 3:
+                cuteRating.setText("3rd");
+                cuteScoreText.setText(String.valueOf(cuteScore + thirdValue));
+                newTotalScore += thirdValue * 2;
+                break;
+            default:
+                cuteRating.setText("-");
+                cuteScoreText.setText(String.valueOf(cuteScore));
+                break;
+        }
+        switch((int)newRating.funnyScore)
+        {
+            case 1:
+                funnyRating.setText("1st");
+                funnyScoreText.setText(String.valueOf(funnyScore + firstValue));
+                newTotalScore += firstValue * 2;
+                break;
+            case 2:
+                funnyRating.setText("2nd");
+                funnyScoreText.setText(String.valueOf(funnyScore + secondValue));
+                newTotalScore += secondValue * 2;
+                break;
+            case 3:
+                funnyRating.setText("3rd");
+                funnyScoreText.setText(String.valueOf(funnyScore + thirdValue));
+                newTotalScore += thirdValue * 2;
+                break;
+            default:
+                funnyRating.setText("-");
+                funnyScoreText.setText(String.valueOf(funnyScore));
+                break;
+        }
+        switch((int)newRating.interestingScore)
+        {
+            case 1:
+                interestingRating.setText("1st");
+                interestingScoreText.setText(String.valueOf(interestingScore + firstValue));
+                newTotalScore += firstValue * 2;
+                break;
+            case 2:
+                interestingRating.setText("2nd");
+                interestingScoreText.setText(String.valueOf(interestingScore + secondValue));
+                newTotalScore += secondValue * 2;
+                break;
+            case 3:
+                interestingRating.setText("3rd");
+                interestingScoreText.setText(String.valueOf(interestingScore + thirdValue));
+                newTotalScore += thirdValue * 2;
+                break;
+            default:
+                interestingRating.setText("-");
+                interestingScoreText.setText(String.valueOf(interestingScore));
+                break;
+        }
+        switch((int)newRating.happyScore)
+        {
+            case 1:
+                happyRating.setText("1st");
+                happyScoreText.setText(String.valueOf(happyScore + firstValue));
+                newTotalScore += firstValue * 2;
+                break;
+            case 2:
+                happyRating.setText("2nd");
+                happyScoreText.setText(String.valueOf(happyScore + secondValue));
+                newTotalScore += secondValue * 2;
+                break;
+            case 3:
+                happyRating.setText("3rd");
+                happyScoreText.setText(String.valueOf(happyScore + thirdValue));
+                newTotalScore += thirdValue * 2;
+                break;
+            default:
+                happyRating.setText("-");
+                happyScoreText.setText(String.valueOf(happyScore));
+                break;
+        }
+        switch((int)newRating.surprisingScore)
+        {
+            case 1:
+                surprisingRating.setText("1st");
+                surprisingScoreText.setText(String.valueOf(surprisingScore + firstValue));
+                newTotalScore += firstValue * 2;
+                break;
+            case 2:
+                surprisingRating.setText("2nd");
+                surprisingScoreText.setText(String.valueOf(surprisingScore + secondValue));
+                newTotalScore += secondValue * 2;
+                break;
+            case 3:
+                surprisingRating.setText("3rd");
+                surprisingScoreText.setText(String.valueOf(surprisingScore + thirdValue));
+                newTotalScore += thirdValue * 2;
+                break;
+            default:
+                surprisingRating.setText("-");
+                surprisingScoreText.setText(String.valueOf(surprisingScore));
+                break;
+        }
+
+        totalScoreText.setText(String.valueOf(newTotalScore));
     }
 
     private void Continue() {
@@ -288,94 +402,94 @@ public class ItemFragment extends Fragment {
                     DocumentReference ratingRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID()).collection("ratings")
                             .document(newRating.getRatingId());
 
-                    long cuteScore = 0;
-                    long funnyScore = 0;
-                    long interestingScore = 0;
-                    long happyScore = 0;
-                    long surprisingScore = 0;
+                    long cuteNewScore = 0;
+                    long funnyNewScore = 0;
+                    long interestingNewScore = 0;
+                    long happyNewScore = 0;
+                    long surprisingNewScore = 0;
 
                     if (currentRating.cuteScore == 1) {
-                        cuteScore = -8;
-                    } else if (currentRating.cuteScore == 2) {
-                        cuteScore = -5;
+                        cuteNewScore = -firstValue;
+                    } else if (currentRating.cuteScore == thirdValue) {
+                        cuteNewScore = -secondValue;
                     } else if (currentRating.cuteScore == 3) {
-                        cuteScore = -2;
+                        cuteNewScore = -thirdValue;
                     }
                     if (newRating.cuteScore == 1) {
-                        cuteScore += 8;
-                    } else if (newRating.cuteScore == 2) {
-                        cuteScore += 5;
+                        cuteNewScore += firstValue;
+                    } else if (newRating.cuteScore == thirdValue) {
+                        cuteNewScore += secondValue;
                     } else if (newRating.cuteScore == 3) {
-                        cuteScore += 2;
+                        cuteNewScore += thirdValue;
                     }
 
                     if (currentRating.funnyScore == 1) {
-                        funnyScore = -8;
-                    } else if (currentRating.funnyScore == 2) {
-                        funnyScore = -5;
+                        funnyNewScore = -firstValue;
+                    } else if (currentRating.funnyScore == thirdValue) {
+                        funnyNewScore = -secondValue;
                     } else if (currentRating.funnyScore == 3) {
-                        funnyScore = -2;
+                        funnyNewScore = -thirdValue;
                     }
                     if (newRating.funnyScore == 1) {
-                        funnyScore += 8;
-                    } else if (newRating.funnyScore == 2) {
-                        funnyScore += 5;
+                        funnyNewScore += firstValue;
+                    } else if (newRating.funnyScore == thirdValue) {
+                        funnyNewScore += secondValue;
                     } else if (newRating.funnyScore == 3) {
-                        funnyScore += 2;
+                        funnyNewScore += thirdValue;
                     }
 
                     if (currentRating.interestingScore == 1) {
-                        interestingScore = -8;
-                    } else if (currentRating.interestingScore == 2) {
-                        interestingScore = -5;
+                        interestingNewScore = -firstValue;
+                    } else if (currentRating.interestingScore == thirdValue) {
+                        interestingNewScore = -secondValue;
                     } else if (currentRating.interestingScore == 3) {
-                        interestingScore = -2;
+                        interestingNewScore = -thirdValue;
                     }
                     if (newRating.interestingScore == 1) {
-                        interestingScore += 8;
-                    } else if (newRating.interestingScore == 2) {
-                        interestingScore += 5;
+                        interestingNewScore += firstValue;
+                    } else if (newRating.interestingScore == thirdValue) {
+                        interestingNewScore += secondValue;
                     } else if (newRating.interestingScore == 3) {
-                        interestingScore += 2;
+                        interestingNewScore += thirdValue;
                     }
 
                     if (currentRating.happyScore == 1) {
-                        happyScore = -8;
-                    } else if (currentRating.happyScore == 2) {
-                        happyScore = -5;
+                        happyNewScore = -firstValue;
+                    } else if (currentRating.happyScore == thirdValue) {
+                        happyNewScore = -secondValue;
                     } else if (currentRating.happyScore == 3) {
-                        happyScore = -2;
+                        happyNewScore = -thirdValue;
                     }
                     if (newRating.happyScore == 1) {
-                        happyScore += 8;
-                    } else if (newRating.happyScore == 2) {
-                        happyScore += 5;
+                        happyNewScore += firstValue;
+                    } else if (newRating.happyScore == thirdValue) {
+                        happyNewScore += secondValue;
                     } else if (newRating.happyScore == 3) {
-                        happyScore += 2;
+                        happyNewScore += thirdValue;
                     }
 
                     if (currentRating.surprisingScore == 1) {
-                        surprisingScore = -8;
-                    } else if (currentRating.surprisingScore == 2) {
-                        surprisingScore = -5;
+                        surprisingNewScore = -firstValue;
+                    } else if (currentRating.surprisingScore == thirdValue) {
+                        surprisingNewScore = -secondValue;
                     } else if (currentRating.surprisingScore == 3) {
-                        surprisingScore = -2;
+                        surprisingNewScore = -thirdValue;
                     }
                     if (newRating.surprisingScore == 1) {
-                        surprisingScore += 8;
-                    } else if (newRating.surprisingScore == 2) {
-                        surprisingScore += 5;
+                        surprisingNewScore += firstValue;
+                    } else if (newRating.surprisingScore == thirdValue) {
+                        surprisingNewScore += secondValue;
                     } else if (newRating.surprisingScore == 3) {
-                        surprisingScore += 2;
+                        surprisingNewScore += thirdValue;
                     }
 
-                    transaction.update(itemRef, "cuteScore", FieldValue.increment(cuteScore));
-                    transaction.update(itemRef, "funnyScore", FieldValue.increment(funnyScore));
-                    transaction.update(itemRef, "interestingScore", FieldValue.increment(interestingScore));
-                    transaction.update(itemRef, "happyScore", FieldValue.increment(happyScore));
-                    transaction.update(itemRef, "surprisingScore", FieldValue.increment(surprisingScore));
+                    transaction.update(itemRef, "cuteScore", FieldValue.increment(cuteNewScore));
+                    transaction.update(itemRef, "funnyScore", FieldValue.increment(funnyNewScore));
+                    transaction.update(itemRef, "interestingScore", FieldValue.increment(interestingNewScore));
+                    transaction.update(itemRef, "happyScore", FieldValue.increment(happyNewScore));
+                    transaction.update(itemRef, "surprisingScore", FieldValue.increment(surprisingNewScore));
 
-                    long totalScore = (cuteScore + funnyScore + interestingScore + happyScore + surprisingScore) * 2;
+                    long totalScore = (cuteNewScore + funnyNewScore + interestingNewScore + happyNewScore + surprisingNewScore) * 2;
                     transaction.update(itemRef, "totalScore", FieldValue.increment(totalScore));
 
                     transaction.set(ratingRef, newRating);
