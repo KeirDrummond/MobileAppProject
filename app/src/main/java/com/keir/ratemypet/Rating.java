@@ -6,6 +6,7 @@ public class Rating implements Serializable {
 
     private String ratingId;
     private String uploadId;
+    private String uploaderId;
 
     public long cuteScore = 0;
     public long funnyScore = 0;
@@ -16,14 +17,16 @@ public class Rating implements Serializable {
     public Rating() {
     }
 
-    public Rating(String ratingId, String uploadId) {
+    public Rating(String ratingId, String uploadId, String uploaderId) {
         this.ratingId = ratingId;
         this.uploadId = uploadId;
+        this.uploaderId = uploaderId;
     }
 
     public Rating(Rating otherRating) {
         this.ratingId = otherRating.ratingId;
         this.uploadId = otherRating.uploadId;
+        this.uploaderId = otherRating.uploaderId;
 
         this.cuteScore = otherRating.cuteScore;
         this.funnyScore = otherRating.funnyScore;
@@ -34,5 +37,6 @@ public class Rating implements Serializable {
 
     public String getRatingId() { return ratingId; }
     public String getUploadId() { return uploadId; }
+    public String getUploaderId() { return uploaderId; }
 
 }

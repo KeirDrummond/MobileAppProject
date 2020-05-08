@@ -9,6 +9,7 @@ public class GalleryItem implements Serializable {
 
     private String id = "";
     private String title = "";
+    private String imageId = "";
     private String imageURL = "";
 
     private String uploaderId;
@@ -25,9 +26,10 @@ public class GalleryItem implements Serializable {
     public GalleryItem() {
     }
 
-    public GalleryItem(String id, String title, String imageURL, String uploaderId, Timestamp timestamp) {
+    public GalleryItem(String id, String title, String imageId, String imageURL, String uploaderId, Timestamp timestamp) {
         this.id = id;
         this.title = title;
+        this.imageId = imageId;
         this.imageURL = imageURL;
         this.uploaderId = uploaderId;
         this.timestamp = timestamp;
@@ -45,6 +47,8 @@ public class GalleryItem implements Serializable {
     public String getTitle() {
         return title;
     }
+
+    public String getImageId() { return imageId; }
 
     public String getImageURL() {
         return imageURL;

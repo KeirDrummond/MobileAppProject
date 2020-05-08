@@ -76,7 +76,7 @@ public class ItemFinder {
                         Rating rating;
                         String uploadId = item.getId();
                         String ratingId = ratingsReference.document().getId();
-                        rating = new Rating(ratingId, uploadId);
+                        rating = new Rating(ratingId, uploadId, item.getUploaderId());
 
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             String ratingUId = doc.get("uploadId").toString();
@@ -143,7 +143,7 @@ public class ItemFinder {
                                             String uploadId = rndList.get(i).getId();
                                             String ratingId = ratingRef.document().getId();
 
-                                            Rating rating = new Rating(ratingId, uploadId);
+                                            Rating rating = new Rating(ratingId, uploadId, rndList.get(i).getUploaderId());
                                             for (DocumentSnapshot doc : queryDocumentSnapshots) {
                                                 String ratingUId = doc.get("uploadId").toString();
                                                 if (ratingUId.equals(uploadId)) {

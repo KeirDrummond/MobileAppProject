@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -153,7 +154,7 @@ public class FileUploadFragment extends Fragment {
 
     private void UploadToStorage(Uri image) {
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String uuid = UUID.randomUUID().toString();
+        final String uuid = UUID.randomUUID().toString();
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         final StorageReference imageReference = storageReference.child("images/" + userID + "/" + uuid);
@@ -171,18 +172,18 @@ public class FileUploadFragment extends Fragment {
                 Uri downloadUri = task.getResult();
                 String url = downloadUri.toString();
 
-                UploadToDatabase(url);
+                UploadToDatabase(uuid, url);
             }
         });
 
     }
 
-    private void UploadToDatabase(String url) {
+    private void UploadToDatabase(String imageId, String url) {
         String userId = Session.getInstance().getCurrentUser().getUserID();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String id = db.collection("images").document().getId();
-        GalleryItem item = CreateItem(id, url);
+        GalleryItem item = CreateItem(id, imageId, url);
 
         WriteBatch batch = db.batch();
 
@@ -194,10 +195,15 @@ public class FileUploadFragment extends Fragment {
         DocumentReference userUploadRef = db.collection("users").document(userId).collection("uploads").document();
         batch.set(userUploadRef, object);
 
-        batch.commit();
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
+            }
+        });
     }
 
-    private GalleryItem CreateItem(String id, String url)
+    private GalleryItem CreateItem(String id, String imageId, String url)
     {
         String title = titleInputBox.getText().toString();
         String imageURL = url;
@@ -207,7 +213,7 @@ public class FileUploadFragment extends Fragment {
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date);
 
-        GalleryItem newItem = new GalleryItem(id, title, imageURL, userId, timestamp);
+        GalleryItem newItem = new GalleryItem(id, title, imageId, imageURL, userId, timestamp);
 
         return newItem;
     }

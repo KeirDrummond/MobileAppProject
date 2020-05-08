@@ -20,6 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GenericItemFragment extends ItemFragment {
 
     GalleryItem item;
@@ -398,8 +401,15 @@ public class GenericItemFragment extends ItemFragment {
                 @Override
                 public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                     DocumentReference itemRef = firestore.collection("images").document(item.getId());
-                    DocumentReference ratingRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID()).collection("ratings")
+                    DocumentReference ratingRef = firestore.collection("images").document(item.getId()).collection("ratings").document(newRating.getRatingId());
+                    DocumentReference userRatingRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID()).collection("ratings")
                             .document(newRating.getRatingId());
+
+                    long cuteOldScore = 0;
+                    long funnyOldScore = 0;
+                    long interestingOldScore = 0;
+                    long happyOldScore = 0;
+                    long surprisingOldScore = 0;
 
                     long cuteNewScore = 0;
                     long funnyNewScore = 0;
@@ -408,78 +418,78 @@ public class GenericItemFragment extends ItemFragment {
                     long surprisingNewScore = 0;
 
                     if (currentRating.cuteScore == 1) {
-                        cuteNewScore = -firstValue;
+                        cuteOldScore = firstValue;
                     } else if (currentRating.cuteScore == thirdValue) {
-                        cuteNewScore = -secondValue;
+                        cuteOldScore = secondValue;
                     } else if (currentRating.cuteScore == 3) {
-                        cuteNewScore = -thirdValue;
+                        cuteOldScore = thirdValue;
                     }
                     if (newRating.cuteScore == 1) {
-                        cuteNewScore += firstValue;
+                        cuteNewScore = cuteOldScore + firstValue;
                     } else if (newRating.cuteScore == thirdValue) {
-                        cuteNewScore += secondValue;
+                        cuteNewScore = cuteOldScore + secondValue;
                     } else if (newRating.cuteScore == 3) {
-                        cuteNewScore += thirdValue;
+                        cuteNewScore = cuteOldScore + thirdValue;
                     }
 
                     if (currentRating.funnyScore == 1) {
-                        funnyNewScore = -firstValue;
+                        funnyOldScore = firstValue;
                     } else if (currentRating.funnyScore == thirdValue) {
-                        funnyNewScore = -secondValue;
+                        funnyOldScore = secondValue;
                     } else if (currentRating.funnyScore == 3) {
-                        funnyNewScore = -thirdValue;
+                        funnyOldScore = thirdValue;
                     }
                     if (newRating.funnyScore == 1) {
-                        funnyNewScore += firstValue;
+                        funnyNewScore = funnyOldScore + firstValue;
                     } else if (newRating.funnyScore == thirdValue) {
-                        funnyNewScore += secondValue;
+                        funnyNewScore = funnyOldScore + secondValue;
                     } else if (newRating.funnyScore == 3) {
-                        funnyNewScore += thirdValue;
+                        funnyNewScore = funnyOldScore + thirdValue;
                     }
 
                     if (currentRating.interestingScore == 1) {
-                        interestingNewScore = -firstValue;
+                        interestingOldScore = firstValue;
                     } else if (currentRating.interestingScore == thirdValue) {
-                        interestingNewScore = -secondValue;
+                        interestingOldScore = secondValue;
                     } else if (currentRating.interestingScore == 3) {
-                        interestingNewScore = -thirdValue;
+                        interestingOldScore = thirdValue;
                     }
                     if (newRating.interestingScore == 1) {
-                        interestingNewScore += firstValue;
+                        interestingNewScore = interestingOldScore + firstValue;
                     } else if (newRating.interestingScore == thirdValue) {
-                        interestingNewScore += secondValue;
+                        interestingNewScore = interestingOldScore + secondValue;
                     } else if (newRating.interestingScore == 3) {
-                        interestingNewScore += thirdValue;
+                        interestingNewScore = interestingOldScore + thirdValue;
                     }
 
                     if (currentRating.happyScore == 1) {
-                        happyNewScore = -firstValue;
+                        happyOldScore = firstValue;
                     } else if (currentRating.happyScore == thirdValue) {
-                        happyNewScore = -secondValue;
+                        happyOldScore = secondValue;
                     } else if (currentRating.happyScore == 3) {
-                        happyNewScore = -thirdValue;
+                        happyOldScore = thirdValue;
                     }
                     if (newRating.happyScore == 1) {
-                        happyNewScore += firstValue;
+                        happyNewScore = happyOldScore + firstValue;
                     } else if (newRating.happyScore == thirdValue) {
-                        happyNewScore += secondValue;
+                        happyNewScore = happyOldScore + secondValue;
                     } else if (newRating.happyScore == 3) {
-                        happyNewScore += thirdValue;
+                        happyNewScore = happyOldScore + thirdValue;
                     }
 
                     if (currentRating.surprisingScore == 1) {
-                        surprisingNewScore = -firstValue;
+                        surprisingOldScore = firstValue;
                     } else if (currentRating.surprisingScore == thirdValue) {
-                        surprisingNewScore = -secondValue;
+                        surprisingOldScore = secondValue;
                     } else if (currentRating.surprisingScore == 3) {
-                        surprisingNewScore = -thirdValue;
+                        surprisingOldScore = thirdValue;
                     }
                     if (newRating.surprisingScore == 1) {
-                        surprisingNewScore += firstValue;
+                        surprisingNewScore = surprisingOldScore + firstValue;
                     } else if (newRating.surprisingScore == thirdValue) {
-                        surprisingNewScore += secondValue;
+                        surprisingNewScore = surprisingOldScore + secondValue;
                     } else if (newRating.surprisingScore == 3) {
-                        surprisingNewScore += thirdValue;
+                        surprisingNewScore = surprisingOldScore + thirdValue;
                     }
 
                     transaction.update(itemRef, "cuteScore", FieldValue.increment(cuteNewScore));
@@ -488,10 +498,20 @@ public class GenericItemFragment extends ItemFragment {
                     transaction.update(itemRef, "happyScore", FieldValue.increment(happyNewScore));
                     transaction.update(itemRef, "surprisingScore", FieldValue.increment(surprisingNewScore));
 
-                    long totalScore = (cuteNewScore + funnyNewScore + interestingNewScore + happyNewScore + surprisingNewScore) * 2;
-                    transaction.update(itemRef, "totalScore", FieldValue.increment(totalScore));
+                    long totalNewScore = (cuteNewScore + funnyNewScore + interestingNewScore + happyNewScore + surprisingNewScore) * 2;
+                    transaction.update(itemRef, "totalScore", FieldValue.increment(totalNewScore));
+
+                    DocumentReference userRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID());
+                    transaction.update(userRef, "ratingScore", FieldValue.increment(totalNewScore));
+
+                    DocumentReference uploaderRef = firestore.collection("users").document(item.getUploaderId());
+                    transaction.update(uploaderRef, "uploaderScore", FieldValue.increment(totalNewScore));
 
                     transaction.set(ratingRef, newRating);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("ratingId", newRating.getRatingId());
+                    map.put("uploadId", newRating.getUploadId());
+                    transaction.set(userRatingRef, map);
 
                     return null;
                 }

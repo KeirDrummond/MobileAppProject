@@ -9,14 +9,23 @@ public class UserAccount implements Serializable {
     private String userID;
     private String displayName;
     private String email;
-    private int level;
+    private long userLevel;
+    private long userExp;
+    private long ratingScore;
+    private long uploadScore;
 
-    public UserAccount(FirebaseUser user)
-    {
+    public UserAccount(FirebaseUser user) {
         userID = user.getUid();
         displayName = user.getDisplayName();
         email = user.getEmail();
-        level = 1;
+        userLevel = 1;
+        userExp = 0;
+        ratingScore = 0;
+        uploadScore = 0;
+    }
+
+    public UserAccount() {
+
     }
 
     public String getUserID() {
@@ -31,7 +40,11 @@ public class UserAccount implements Serializable {
         return email;
     }
 
-    public int getLevel() {
-        return level;
-    }
+    public long getUserExp() { return userExp; }
+
+    public long getRatingScore() { return ratingScore; }
+
+    public long getUploadScore() { return uploadScore; }
+
+    public long getUserLevel() { return userLevel; }
 }

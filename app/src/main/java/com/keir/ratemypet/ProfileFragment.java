@@ -39,11 +39,16 @@ public class ProfileFragment extends Fragment {
         TextView usernameDisplay = view.findViewById(R.id.profileUsername);
         usernameDisplay.setText(user.getDisplayName());
 
+        TextView uploadScoreDisplay = view.findViewById(R.id.uploadScore);
+        uploadScoreDisplay.setText("Upload Score: " + user.getUploadScore());
+
+        TextView ratingScoreDisplay = view.findViewById(R.id.ratingScore);
+        ratingScoreDisplay.setText("Rating Score: " + user.getRatingScore());
+
         ((MainActivity) getActivity()).ShowTaskbar();
 
         recyclerView = view.findViewById(R.id.recycleView);
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         ItemFinder.getInstance().getProfileItems(user, new GalleryItemListener() {
             @Override
             public void getResult(ArrayList<GalleryItem> items) {
