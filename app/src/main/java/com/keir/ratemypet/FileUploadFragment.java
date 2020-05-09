@@ -179,7 +179,7 @@ public class FileUploadFragment extends Fragment {
     }
 
     private void UploadToDatabase(String imageId, String url) {
-        String userId = Session.getInstance().getCurrentUser().getUserID();
+        String userId = Session.getInstance().getCurrentUser().getUserId();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String id = db.collection("images").document().getId();
@@ -208,7 +208,7 @@ public class FileUploadFragment extends Fragment {
         String title = titleInputBox.getText().toString();
         String imageURL = url;
 
-        String userId = Session.getInstance().getCurrentUser().getUserID();
+        String userId = Session.getInstance().getCurrentUser().getUserId();
 
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date);

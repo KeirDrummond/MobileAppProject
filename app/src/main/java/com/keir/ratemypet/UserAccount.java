@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class UserAccount implements Serializable {
 
-    private String userID;
+    private String userId;
     private String displayName;
     private String email;
     private long userLevel;
@@ -15,7 +15,7 @@ public class UserAccount implements Serializable {
     private long uploadScore;
 
     public UserAccount(FirebaseUser user) {
-        userID = user.getUid();
+        userId = user.getUid();
         displayName = user.getDisplayName();
         email = user.getEmail();
         userLevel = 1;
@@ -28,8 +28,8 @@ public class UserAccount implements Serializable {
 
     }
 
-    public String getUserID() {
-        return userID;
+    public String getUserId() {
+        return userId;
     }
 
     public String getDisplayName() {

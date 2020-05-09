@@ -11,14 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
+
+    GoogleSignInClient googleSignInClient;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
         ((MainActivity) getActivity()).ShowTaskbar();
 
@@ -35,6 +47,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 OpenItemActivity();
+            }
+        });
+
+        Button signOutButton = view.findViewById(R.id.signOut);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                googleSignInClient.signOut();
+                FirebaseAuth.getInstance().signOut();
             }
         });
 

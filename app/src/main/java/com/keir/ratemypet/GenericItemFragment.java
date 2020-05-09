@@ -21,7 +21,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class GenericItemFragment extends ItemFragment {
 
@@ -402,7 +401,7 @@ public class GenericItemFragment extends ItemFragment {
                 public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                     DocumentReference itemRef = firestore.collection("images").document(item.getId());
                     DocumentReference ratingRef = firestore.collection("images").document(item.getId()).collection("ratings").document(newRating.getRatingId());
-                    DocumentReference userRatingRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID()).collection("ratings")
+                    DocumentReference userRatingRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserId()).collection("ratings")
                             .document(newRating.getRatingId());
 
                     long cuteOldScore = 0;
@@ -501,7 +500,7 @@ public class GenericItemFragment extends ItemFragment {
                     long totalNewScore = (cuteNewScore + funnyNewScore + interestingNewScore + happyNewScore + surprisingNewScore) * 2;
                     transaction.update(itemRef, "totalScore", FieldValue.increment(totalNewScore));
 
-                    DocumentReference userRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserID());
+                    DocumentReference userRef = firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserId());
                     transaction.update(userRef, "ratingScore", FieldValue.increment(totalNewScore));
 
                     DocumentReference uploaderRef = firestore.collection("users").document(item.getUploaderId());

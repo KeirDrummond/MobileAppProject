@@ -3,7 +3,6 @@ package com.keir.ratemypet;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -12,10 +11,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +59,7 @@ public class ItemFinder {
         final DocumentReference itemRef = firestore.collection("images").
                 document(item.getId());
         final CollectionReference ratingsReference = firestore.collection("users")
-                .document(Session.getInstance().getCurrentUser().getUserID())
+                .document(Session.getInstance().getCurrentUser().getUserId())
                 .collection("ratings");
 
         itemRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -133,7 +130,7 @@ public class ItemFinder {
                         }
 
                         final CollectionReference ratingRef = firestore.collection("users")
-                                .document(Session.getInstance().getCurrentUser().getUserID())
+                                .document(Session.getInstance().getCurrentUser().getUserId())
                                 .collection("ratings");
                         ratingRef.get()
                                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -161,7 +158,7 @@ public class ItemFinder {
     }
 
     public void getProfileItems(final UserAccount user, final GalleryItemListener listener) {
-        Query query = firestore.collection("images").whereEqualTo("uploaderId", user.getUserID());
+        Query query = firestore.collection("images").whereEqualTo("uploaderId", user.getUserId());
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

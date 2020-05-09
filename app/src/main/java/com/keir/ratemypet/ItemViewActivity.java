@@ -26,7 +26,7 @@ public class ItemViewActivity extends AppCompatActivity {
         for (int i = 0; i < itemList.size(); i++)
         {
             String uploaderId = itemList.get(i).getUploaderId();
-            if (!uploaderId.equals(Session.getInstance().getCurrentUser().getUserID())) {
+            if (!uploaderId.equals(Session.getInstance().getCurrentUser().getUserId())) {
                 GenericItemFragment genericItemFragment = GenericItemFragment.newInstance(itemList.get(i), ratings.get(i));
                 itemFragments.add(genericItemFragment);
             }

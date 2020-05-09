@@ -83,7 +83,7 @@ public class MyItemFragment extends ItemFragment {
     }
 
     private void DeleteItem() {
-        String UserId = Session.getInstance().getCurrentUser().getUserID();
+        String UserId = Session.getInstance().getCurrentUser().getUserId();
         final StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images/" + UserId + "/" + item.getImageId());
 
         final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
