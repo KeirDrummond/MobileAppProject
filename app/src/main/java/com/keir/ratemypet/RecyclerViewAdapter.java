@@ -65,6 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View view) {
+            ((MainActivity) context).Loading(true);
             ItemFinder.getInstance().GetItem(items.get(getAdapterPosition()), new SingleListener() {
                 @Override
                 public void getResult(List<GalleryItem> item, List<Rating> rating) {
@@ -74,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     bundle.putSerializable("ratings", (Serializable) rating);
                     intent.putExtra("items", bundle);
 
-                    context.startActivity(intent);
+                    ((MainActivity) context).OpenItems(intent);
                 }
             });
 

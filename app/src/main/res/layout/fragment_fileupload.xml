@@ -21,7 +21,7 @@
     <EditText
         android:id="@+id/titleInputBox"
         android:layout_width="300dp"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:layout_above="@+id/uploadBtn"
         android:layout_centerHorizontal="true"/>
 
@@ -29,8 +29,16 @@
         android:id="@+id/uploadBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/progressBar"
         android:layout_centerHorizontal="true"
         android:text="UPLOAD"
         android:clickable="true"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:progress="0"/>
+
 </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,7 @@ public class HomeFragment extends Fragment {
                 .build();
         googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
-        ((MainActivity) getActivity()).ShowTaskbar();
+        ((MainActivity) getActivity()).TaskbarDisplay(true);
 
         Button uploadBtn = view.findViewById(R.id.uploadbtn);
         uploadBtn.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +66,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void OpenItemActivity() {
+        ((MainActivity) getActivity()).Loading(true);
         ItemFinder.getInstance().GetRandomItemList(5, new RandomListener() {
             @Override
             public void getResult(List<GalleryItem> items, List<Rating> ratings) {
@@ -75,7 +77,11 @@ public class HomeFragment extends Fragment {
                     bundle.putSerializable("ratings", (Serializable) ratings);
                     intent.putExtra("items", bundle);
 
-                    startActivity(intent);
+                    ((MainActivity) getActivity()).OpenItems(intent);
+                } else {
+                    ((MainActivity) getActivity()).Loading(false);
+                    Toast toast = Toast.makeText(getContext(), "Unable to find unrated pets.", Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         });

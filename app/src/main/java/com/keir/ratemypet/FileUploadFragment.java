@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -44,17 +47,23 @@ public class FileUploadFragment extends Fragment {
     ImageView imagePreview;
     EditText titleInputBox;
 
+    ProgressBar progressBar;
+    long imageProgress;
+    long databaseProgress;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fileupload, container, false);
 
-        ((MainActivity) getActivity()).ShowTaskbar();
+        ((MainActivity) getActivity()).TaskbarDisplay(true);
 
         Button fileSelectBtn = view.findViewById(R.id.fileSelectBtn);
         Button uploadBtn = view.findViewById(R.id.uploadBtn);
         imagePreview = view.findViewById(R.id.imagePreview);
         titleInputBox = view.findViewById(R.id.titleInputBox);
+        progressBar = view.findViewById(R.id.progressBar);
+        DisplayProgress(false);
 
         fileSelectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +170,18 @@ public class FileUploadFragment extends Fragment {
 
         final UploadTask uploadTask = imageReference.putFile(image);
 
-        uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        progressBar.setProgress(0);
+        DisplayProgress(true);
+
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                long bytes = taskSnapshot.getBytesTransferred();
+                long total = taskSnapshot.getTotalByteCount();
+                imageProgress = (bytes / total) * 100;
+                progressBar.setProgress(Math.toIntExact(imageProgress));
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 return imageReference.getDownloadUrl();
@@ -169,13 +189,15 @@ public class FileUploadFragment extends Fragment {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                Uri downloadUri = task.getResult();
-                String url = downloadUri.toString();
+                DisplayProgress(false);
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    String url = downloadUri.toString();
 
-                UploadToDatabase(uuid, url);
+                    UploadToDatabase(uuid, url);
+                }
             }
         });
-
     }
 
     private void UploadToDatabase(String imageId, String url) {
@@ -201,6 +223,15 @@ public class FileUploadFragment extends Fragment {
                 ((MainActivity) getActivity()).ChangeFragment(new HomeFragment());
             }
         });
+    }
+
+    private void DisplayProgress(boolean state) {
+        if (state) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     private GalleryItem CreateItem(String id, String imageId, String url)

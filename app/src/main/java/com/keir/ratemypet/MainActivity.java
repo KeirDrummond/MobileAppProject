@@ -1,14 +1,18 @@
 package com.keir.ratemypet;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainer;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +27,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
+    FrameLayout fragmentContainer;
+    ImageView loadingOverlay;
     BottomNavigationView navBar;
 
     @Override
@@ -74,8 +80,14 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
+        loadingOverlay = (ImageView) findViewById(R.id.loading);
+
         navBar = (BottomNavigationView) findViewById(R.id.NavBar);
         navBar.setOnNavigationItemSelectedListener(navListener);
+
+        UserDisplay(true);
+        TaskbarDisplay(true);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
@@ -115,14 +127,37 @@ public class MainActivity extends AppCompatActivity {
         } else { userDisplayLayout.setVisibility(View.INVISIBLE); }
     }
 
-    public void HideTaskbar()
-    {
-        navBar.setVisibility(View.INVISIBLE);
+    public void Loading(boolean loading) {
+        if (loading) {
+            loadingOverlay.setVisibility(View.VISIBLE);
+            fragmentContainer.setVisibility(View.INVISIBLE);
+        }
+        else {
+            loadingOverlay.setVisibility(View.INVISIBLE);
+            fragmentContainer.setVisibility(View.VISIBLE);
+        }
     }
 
-    public void ShowTaskbar()
+    public void OpenItems(Intent intent) {
+        startActivityForResult(intent, 100);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Loading(false);
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void TaskbarDisplay(boolean state)
     {
-        navBar.setVisibility(View.VISIBLE);
+        if (state) {
+            navBar.setVisibility(View.VISIBLE);
+        }
+        else {
+            navBar.setVisibility(View.INVISIBLE);
+        }
+
     }
 
 }

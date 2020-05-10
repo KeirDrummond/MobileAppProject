@@ -46,7 +46,7 @@ public class ProfileFragment extends Fragment {
         TextView ratingScoreDisplay = view.findViewById(R.id.ratingScore);
         ratingScoreDisplay.setText("Rating Score: " + user.getRatingScore());
 
-        ((MainActivity) getActivity()).ShowTaskbar();
+        ((MainActivity) getActivity()).TaskbarDisplay(true);
 
         recyclerView = view.findViewById(R.id.recycleView);
 

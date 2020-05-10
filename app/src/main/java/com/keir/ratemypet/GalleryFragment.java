@@ -26,7 +26,7 @@ public class GalleryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        ((MainActivity) getActivity()).ShowTaskbar();
+        ((MainActivity) getActivity()).TaskbarDisplay(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleitems);
 
