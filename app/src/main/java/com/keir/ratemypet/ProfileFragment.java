@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -51,7 +52,7 @@ public class ProfileFragment extends Fragment {
 
         ItemFinder.getInstance().getProfileItems(user, new GalleryItemListener() {
             @Override
-            public void getResult(ArrayList<GalleryItem> items) {
+            public void getResult(List<GalleryItem> items) {
                 PopulateTable(items);
             }
         });
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void PopulateTable(ArrayList<GalleryItem> items) {
+    private void PopulateTable(List<GalleryItem> items) {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(items, this.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

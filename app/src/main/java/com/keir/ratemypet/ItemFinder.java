@@ -3,6 +3,7 @@ package com.keir.ratemypet;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -11,10 +12,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -93,68 +97,76 @@ public class ItemFinder {
         });
     }
 
+    /*
+    // Get a random list of items.
+    // The item list follows some restrictions.
+    // An item will not appear in the list more than once.
+    // An item will not appear if the user has rated it before.
+    // An item will not appear if it is their own.
+    */
+
     public void GetRandomItemList(final int listSize, final RandomListener listener) {
-        firestore.collection("images")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+        firestore.collection("images").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                final List<DocumentSnapshot> images = queryDocumentSnapshots.getDocuments();
+
+                firestore.collection("users").document(Session.getInstance().getCurrentUser().getUserId())
+                        .collection("ratings").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-                        int noOfResults = docs.size();
-                        int size = Math.min(listSize, noOfResults);
+                        List<DocumentSnapshot> myRatings = queryDocumentSnapshots.getDocuments();
 
-                        final ArrayList<GalleryItem> rndList = new ArrayList<>();
-                        final ArrayList<Rating> ratings = new ArrayList<>();
+                        int noOfResults = images.size();
+                        int size = Math.min(listSize, noOfResults); // Ensures the final list size is not larger than the amount of results.
 
-                        int counter = 0;
-                        while (counter < size) {
-                            int randomValue = new Random().nextInt(noOfResults);
-                            if (rndList.size() != 0) {
-                                boolean copy = false;
-                                for (GalleryItem item : rndList) {
-                                    String itemId = item.getId();
-                                    String otherItemId = docs.get(randomValue).getId();
-                                    if (itemId.equals(otherItemId)) {
-                                        copy = true;
+                        final List<GalleryItem> randomList = new ArrayList<>(); // The list object that we will be returning.
+                        final List<Rating> ratings = new ArrayList<>(); // The associated ratings for each item.
+
+                        for (DocumentSnapshot image : images) {
+                            boolean valid = true;
+                            String id = image.get("id").toString();
+                            if (valid) {                                                            // Check if the item is not belong to the user.
+                                String uploaderId = image.get("uploaderId").toString();
+                                String userId = Session.getInstance().getCurrentUser().getUserId();
+                                if (uploaderId.equals(userId)) {
+                                    valid = false;
+                                }
+                            }
+                            if (valid) {                                                            // Check if the item has not previously been rated.
+                                for (DocumentSnapshot rating : myRatings) {
+                                    String uploadId = rating.get("uploadId").toString();
+                                    if (uploadId.equals(id)) {
+                                        valid = false;
                                         break;
                                     }
                                 }
-                                if (!copy) {
-                                    rndList.add(docs.get(randomValue).toObject(GalleryItem.class));
-                                    counter++;
-                                }
-                            } else {
-                                rndList.add(docs.get(randomValue).toObject(GalleryItem.class));
-                                counter++;
+                            }
+                            if (valid) {
+                                GalleryItem item = image.toObject(GalleryItem.class);
+                                randomList.add(item);
+                            }
+                        }
+                        Collections.shuffle(randomList);
+
+                        List<GalleryItem> items = new ArrayList<>();
+                        if (randomList.size() != 0) {
+                            for (int i = 0; i < size; i++) {
+                                items.set(i, randomList.get(i));
                             }
                         }
 
-                        final CollectionReference ratingRef = firestore.collection("users")
-                                .document(Session.getInstance().getCurrentUser().getUserId())
-                                .collection("ratings");
-                        ratingRef.get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        for (int i = 0; i < rndList.size(); i++) {
-                                            String uploadId = rndList.get(i).getId();
-                                            String ratingId = ratingRef.document().getId();
-
-                                            Rating rating = new Rating(ratingId, uploadId, rndList.get(i).getUploaderId());
-                                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                                                String ratingUId = doc.get("uploadId").toString();
-                                                if (ratingUId.equals(uploadId)) {
-                                                    rating = doc.toObject(Rating.class);
-                                                    break;
-                                                }
-                                            }
-                                            ratings.add(rating);
-                                        }
-                                        listener.getResult(rndList, ratings);
-                                    }
-                                });
+                        for (GalleryItem item : items) {
+                            String newRatingId = firestore.collection("images").document(item.getId()).collection("ratings").document().getId();
+                            Rating rating = new Rating(newRatingId, item.getId(), Session.getInstance().getCurrentUser().getUserId());
+                            ratings.add(rating);
+                        }
+                        listener.getResult(items, ratings);
                     }
                 });
+            }
+        });
     }
 
     public void getProfileItems(final UserAccount user, final GalleryItemListener listener) {

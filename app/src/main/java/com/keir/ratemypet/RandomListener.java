@@ -1,7 +1,7 @@
 package com.keir.ratemypet;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface RandomListener {
-    void getResult(ArrayList<GalleryItem> items, ArrayList<Rating> ratings);
+    void getResult(List<GalleryItem> items, List<Rating> ratings);
 }

@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GalleryFragment extends Fragment {
 
@@ -33,7 +34,7 @@ public class GalleryFragment extends Fragment {
         Query query = firestore.collection("images");
         ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
             @Override
-            public void getResult(ArrayList<GalleryItem> items) {
+            public void getResult(List<GalleryItem> items) {
                 PopulateTable(items);
             }
         });
@@ -41,7 +42,7 @@ public class GalleryFragment extends Fragment {
         return view;
     }
 
-    private void PopulateTable(ArrayList<GalleryItem> itemList) {
+    private void PopulateTable(List<GalleryItem> itemList) {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(itemList, this.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

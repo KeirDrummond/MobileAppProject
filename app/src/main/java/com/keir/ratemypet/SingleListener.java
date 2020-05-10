@@ -1,7 +1,7 @@
 package com.keir.ratemypet;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface SingleListener {
-    void getResult(ArrayList<GalleryItem> item, ArrayList<Rating> ratings);
+    void getResult(List<GalleryItem> item, List<Rating> ratings);
 }

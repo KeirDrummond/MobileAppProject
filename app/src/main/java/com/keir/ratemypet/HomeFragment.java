@@ -16,7 +16,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
 
@@ -65,12 +67,12 @@ public class HomeFragment extends Fragment {
     public void OpenItemActivity() {
         ItemFinder.getInstance().GetRandomItemList(5, new RandomListener() {
             @Override
-            public void getResult(ArrayList<GalleryItem> items, ArrayList<Rating> ratings) {
+            public void getResult(List<GalleryItem> items, List<Rating> ratings) {
                 if (items.size() != 0) {
                     Intent intent = new Intent(getContext(), ItemViewActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("items", items);
-                    bundle.putSerializable("ratings", ratings);
+                    bundle.putSerializable("items", (Serializable) items);
+                    bundle.putSerializable("ratings", (Serializable) ratings);
                     intent.putExtra("items", bundle);
 
                     startActivity(intent);
