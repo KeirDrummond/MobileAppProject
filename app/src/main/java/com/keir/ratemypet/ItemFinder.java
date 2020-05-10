@@ -153,7 +153,7 @@ public class ItemFinder {
                         List<GalleryItem> items = new ArrayList<>();
                         if (randomList.size() != 0) {
                             for (int i = 0; i < size; i++) {
-                                items.set(i, randomList.get(i));
+                                items.add(i, randomList.get(i));
                             }
                         }
 
