@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,11 +33,11 @@ public class GenericItemFragment extends ItemFragment {
     TextView happyRating;
     TextView surprisingRating;
 
-    Button cuteBtn;
-    Button funnyBtn;
-    Button interestingBtn;
-    Button happyBtn;
-    Button surprisingBtn;
+    ImageButton cuteBtn;
+    ImageButton funnyBtn;
+    ImageButton interestingBtn;
+    ImageButton happyBtn;
+    ImageButton surprisingBtn;
 
     long cuteScore;
     long funnyScore;

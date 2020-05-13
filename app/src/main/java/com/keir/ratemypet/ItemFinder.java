@@ -62,7 +62,7 @@ public class ItemFinder {
     public void GetItem(final GalleryItem item, final SingleListener listener) {
         final DocumentReference itemRef = firestore.collection("images").
                 document(item.getId());
-        final CollectionReference ratingsReference = firestore.collection("users")
+        final CollectionReference userRatingsReference = firestore.collection("users")
                 .document(Session.getInstance().getCurrentUser().getUserId())
                 .collection("ratings");
 
@@ -71,26 +71,46 @@ public class ItemFinder {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 final GalleryItem newItem = documentSnapshot.toObject(GalleryItem.class);
 
-                ratingsReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                userRatingsReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        Rating rating;
                         String uploadId = item.getId();
-                        String ratingId = ratingsReference.document().getId();
-                        rating = new Rating(ratingId, uploadId, item.getUploaderId());
+
+                        boolean found = false;
+                        String foundRatingId = "";
 
                         for (DocumentSnapshot doc : queryDocumentSnapshots) {
                             String ratingUId = doc.get("uploadId").toString();
                             if (ratingUId.equals(uploadId)) {
-                                rating = (doc.toObject(Rating.class));
+                                found = true;
+                                foundRatingId = doc.get("ratingId").toString();
                                 break;
                             }
                         }
-                        ArrayList<GalleryItem> aItem = new ArrayList();
+
+                        final ArrayList<GalleryItem> aItem = new ArrayList();
                         aItem.add(newItem);
-                        ArrayList<Rating> aRating = new ArrayList();
-                        aRating.add(rating);
-                        listener.getResult(aItem, aRating);
+
+                        if (found) {
+                            firestore.collection("images").document(item.getId()).collection("ratings").document(foundRatingId).get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            List<Rating> aRating = new ArrayList<>();
+                                            Rating rating = documentSnapshot.toObject(Rating.class);
+                                            aRating.add(rating);
+                                            listener.getResult(aItem, aRating);
+                                        }
+                                    });
+                        } else {
+                            ArrayList<Rating> aRating = new ArrayList();
+                            String ratingId = userRatingsReference.document().getId();
+                            Rating rating = new Rating(ratingId, uploadId, item.getUploaderId());
+                            aRating.add(rating);
+                            listener.getResult(aItem, aRating);
+                        }
+
+
                     }
                 });
             }
@@ -117,9 +137,6 @@ public class ItemFinder {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<DocumentSnapshot> myRatings = queryDocumentSnapshots.getDocuments();
-
-                        int noOfResults = images.size();
-                        int size = Math.min(listSize, noOfResults); // Ensures the final list size is not larger than the amount of results.
 
                         final List<GalleryItem> randomList = new ArrayList<>(); // The list object that we will be returning.
                         final List<Rating> ratings = new ArrayList<>(); // The associated ratings for each item.
@@ -149,6 +166,8 @@ public class ItemFinder {
                             }
                         }
                         Collections.shuffle(randomList);
+
+                        int size = Math.min(listSize, randomList.size()); // Ensures the final list size is not larger than the amount of results.
 
                         List<GalleryItem> items = new ArrayList<>();
                         if (randomList.size() != 0) {
