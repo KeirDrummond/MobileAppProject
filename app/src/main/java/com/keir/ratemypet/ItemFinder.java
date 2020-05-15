@@ -3,7 +3,6 @@ package com.keir.ratemypet;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -12,15 +11,12 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class ItemFinder {
     // Utility class
@@ -44,6 +40,8 @@ public class ItemFinder {
         return instance;
     }
 
+    // Gets a list of items as according to a query.
+
     public void GetGalleryItems(Query query, final GalleryItemListener listener) {
         query.limit(50).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -58,6 +56,10 @@ public class ItemFinder {
                     }
                 });
     }
+
+    // Retrieve the data for a single item.
+    // Used for the gallery for accessing an up to date version of the score.
+    // Also gets the user's rating for an item if it exists. If not, a new empty one is created.
 
     public void GetItem(final GalleryItem item, final SingleListener listener) {
         final DocumentReference itemRef = firestore.collection("images").
@@ -187,6 +189,8 @@ public class ItemFinder {
             }
         });
     }
+
+    // Gets all items that have been uploaded by a given user.
 
     public void getProfileItems(final UserAccount user, final GalleryItemListener listener) {
         Query query = firestore.collection("images").whereEqualTo("uploaderId", user.getUserId());
