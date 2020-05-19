@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,8 +11,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     FrameLayout fragmentContainer;
-    ImageView loadingOverlay;
+    ProgressBar loadingOverlay;
     BottomNavigationView navBar;
 
     @Override
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         fragmentContainer = (FrameLayout) findViewById(R.id.fragment_container);
-        loadingOverlay = (ImageView) findViewById(R.id.loading);
+        loadingOverlay = (ProgressBar) findViewById(R.id.loading);
 
         navBar = (BottomNavigationView) findViewById(R.id.NavBar);
         navBar.setOnNavigationItemSelectedListener(navListener);

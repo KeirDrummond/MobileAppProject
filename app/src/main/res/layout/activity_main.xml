@@ -37,12 +37,12 @@
             android:layout_height="match_parent"
             android:visibility="visible"/>
 
-        <ImageView
+        <ProgressBar
             android:id="@+id/loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_photo_library_black_24dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:indeterminate="true"/>
 
     </RelativeLayout>
 
