@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:layout_height="150dp"
     android:orientation="vertical"
     android:id="@+id/linearLayout"
     android:background="#cccccc"
@@ -8,22 +8,29 @@
     android:layout_marginBottom="5dp">
 
     <ImageView
-        android:layout_height="100dp"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".6"
         android:layout_gravity="center"
         android:id="@+id/thumbnail"
         android:contentDescription="@string/thumbnail" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="0dp"
+        android:layout_weight=".2"
         android:gravity="center"
-        android:id="@+id/title"/>
+        android:id="@+id/title"
+        android:padding="5dp"
+        android:autoSizeTextType="uniform"/>
 
     <TextView
         android:id="@+id/username"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:gravity="center"/>
+        android:layout_height="0dp"
+        android:layout_weight=".2"
+        android:gravity="center"
+        android:padding="5dp"
+        android:autoSizeTextType="uniform"/>
 
 </LinearLayout>

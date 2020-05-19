@@ -48,7 +48,7 @@ public class ItemFinder {
         collection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(final QuerySnapshot queryDocumentSnapshots) {
-                query.limit(50).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {

@@ -34,7 +34,7 @@ public class GalleryFragment extends Fragment {
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         loadingOverlay.setVisibility(View.VISIBLE);
-        Query query = firestore.collection("images");
+        Query query = firestore.collection("images").limit(50);
         ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
             @Override
             public void getResult(List<GalleryItem> items) {

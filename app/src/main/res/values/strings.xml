@@ -26,4 +26,5 @@
     <string name="rating_score">Rating Score</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="title">Title</string>
+    <string name="top_images">Top Images</string>
 </resources>
