@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.util.HashMap;
@@ -419,77 +420,87 @@ public class GenericItemFragment extends ItemFragment {
 
                     if (currentRating.cuteScore == 1) {
                         cuteOldScore = firstValue;
-                    } else if (currentRating.cuteScore == thirdValue) {
+                    } else if (currentRating.cuteScore == 2) {
                         cuteOldScore = secondValue;
                     } else if (currentRating.cuteScore == 3) {
                         cuteOldScore = thirdValue;
                     }
-                    if (newRating.cuteScore == 1) {
-                        cuteNewScore = cuteOldScore + firstValue;
+                    if (newRating.cuteScore == 0) {
+                        cuteNewScore = -cuteOldScore;
+                    } else if (newRating.cuteScore == 1) {
+                        cuteNewScore = -cuteOldScore + firstValue;
                     } else if (newRating.cuteScore == thirdValue) {
-                        cuteNewScore = cuteOldScore + secondValue;
+                        cuteNewScore = -cuteOldScore + secondValue;
                     } else if (newRating.cuteScore == 3) {
-                        cuteNewScore = cuteOldScore + thirdValue;
+                        cuteNewScore = -cuteOldScore + thirdValue;
                     }
 
                     if (currentRating.funnyScore == 1) {
                         funnyOldScore = firstValue;
-                    } else if (currentRating.funnyScore == thirdValue) {
+                    } else if (currentRating.funnyScore == 2) {
                         funnyOldScore = secondValue;
                     } else if (currentRating.funnyScore == 3) {
                         funnyOldScore = thirdValue;
                     }
-                    if (newRating.funnyScore == 1) {
-                        funnyNewScore = funnyOldScore + firstValue;
+                    if (newRating.funnyScore == 0) {
+                        funnyNewScore = -funnyOldScore;
+                    } else if (newRating.funnyScore == 1) {
+                        funnyNewScore = -funnyOldScore + firstValue;
                     } else if (newRating.funnyScore == thirdValue) {
-                        funnyNewScore = funnyOldScore + secondValue;
+                        funnyNewScore = -funnyOldScore + secondValue;
                     } else if (newRating.funnyScore == 3) {
-                        funnyNewScore = funnyOldScore + thirdValue;
+                        funnyNewScore = -funnyOldScore + thirdValue;
                     }
 
                     if (currentRating.interestingScore == 1) {
                         interestingOldScore = firstValue;
-                    } else if (currentRating.interestingScore == thirdValue) {
+                    } else if (currentRating.interestingScore == 2) {
                         interestingOldScore = secondValue;
                     } else if (currentRating.interestingScore == 3) {
                         interestingOldScore = thirdValue;
                     }
-                    if (newRating.interestingScore == 1) {
-                        interestingNewScore = interestingOldScore + firstValue;
+                    if (newRating.interestingScore == 0) {
+                        interestingNewScore = -interestingOldScore;
+                    } else if (newRating.interestingScore == 1) {
+                        interestingNewScore = -interestingOldScore + firstValue;
                     } else if (newRating.interestingScore == thirdValue) {
-                        interestingNewScore = interestingOldScore + secondValue;
+                        interestingNewScore = -interestingOldScore + secondValue;
                     } else if (newRating.interestingScore == 3) {
-                        interestingNewScore = interestingOldScore + thirdValue;
+                        interestingNewScore = -interestingOldScore + thirdValue;
                     }
 
                     if (currentRating.happyScore == 1) {
                         happyOldScore = firstValue;
-                    } else if (currentRating.happyScore == thirdValue) {
+                    } else if (currentRating.happyScore == 2) {
                         happyOldScore = secondValue;
                     } else if (currentRating.happyScore == 3) {
                         happyOldScore = thirdValue;
                     }
-                    if (newRating.happyScore == 1) {
-                        happyNewScore = happyOldScore + firstValue;
+                    if (newRating.happyScore == 0) {
+                        happyNewScore = -happyOldScore;
+                    } else if (newRating.happyScore == 1) {
+                        happyNewScore = -happyOldScore + firstValue;
                     } else if (newRating.happyScore == thirdValue) {
-                        happyNewScore = happyOldScore + secondValue;
+                        happyNewScore = -happyOldScore + secondValue;
                     } else if (newRating.happyScore == 3) {
-                        happyNewScore = happyOldScore + thirdValue;
+                        happyNewScore = -happyOldScore + thirdValue;
                     }
 
                     if (currentRating.surprisingScore == 1) {
                         surprisingOldScore = firstValue;
-                    } else if (currentRating.surprisingScore == thirdValue) {
+                    } else if (currentRating.surprisingScore == 2) {
                         surprisingOldScore = secondValue;
                     } else if (currentRating.surprisingScore == 3) {
                         surprisingOldScore = thirdValue;
                     }
-                    if (newRating.surprisingScore == 1) {
-                        surprisingNewScore = surprisingOldScore + firstValue;
+                    if (newRating.surprisingScore == 0) {
+                        surprisingNewScore = -surprisingOldScore;
+                    } else if (newRating.surprisingScore == 1) {
+                        surprisingNewScore = -surprisingOldScore + firstValue;
                     } else if (newRating.surprisingScore == thirdValue) {
-                        surprisingNewScore = surprisingOldScore + secondValue;
+                        surprisingNewScore = -surprisingOldScore + secondValue;
                     } else if (newRating.surprisingScore == 3) {
-                        surprisingNewScore = surprisingOldScore + thirdValue;
+                        surprisingNewScore = -surprisingOldScore + thirdValue;
                     }
 
                     transaction.update(itemRef, "cuteScore", FieldValue.increment(cuteNewScore));
@@ -505,7 +516,7 @@ public class GenericItemFragment extends ItemFragment {
                     transaction.update(userRef, "ratingScore", FieldValue.increment(totalNewScore));
 
                     DocumentReference uploaderRef = firestore.collection("users").document(item.getUploaderId());
-                    transaction.update(uploaderRef, "uploaderScore", FieldValue.increment(totalNewScore));
+                    transaction.update(uploaderRef, "uploadScore", FieldValue.increment(totalNewScore));
 
                     transaction.set(ratingRef, newRating);
                     HashMap<String, Object> map = new HashMap<>();

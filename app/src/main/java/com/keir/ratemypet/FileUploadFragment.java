@@ -240,11 +240,12 @@ public class FileUploadFragment extends Fragment {
         String imageURL = url;
 
         String userId = Session.getInstance().getCurrentUser().getUserId();
+        String name = Session.getInstance().getCurrentUser().getDisplayName();
 
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date);
 
-        GalleryItem newItem = new GalleryItem(id, title, imageId, imageURL, userId, timestamp);
+        GalleryItem newItem = new GalleryItem(id, title, imageId, imageURL, userId, name, timestamp);
 
         return newItem;
     }

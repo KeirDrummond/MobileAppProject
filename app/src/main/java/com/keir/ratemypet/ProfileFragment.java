@@ -12,9 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
@@ -41,10 +38,10 @@ public class ProfileFragment extends Fragment {
         usernameDisplay.setText(user.getDisplayName());
 
         TextView uploadScoreDisplay = view.findViewById(R.id.uploadScore);
-        uploadScoreDisplay.setText("Upload Score: " + user.getUploadScore());
+        uploadScoreDisplay.setText(Long.toString(user.getUploadScore()));
 
         TextView ratingScoreDisplay = view.findViewById(R.id.ratingScore);
-        ratingScoreDisplay.setText("Rating Score: " + user.getRatingScore());
+        ratingScoreDisplay.setText(Long.toString(user.getRatingScore()));
 
         ((MainActivity) getActivity()).TaskbarDisplay(true);
 

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,19 +43,36 @@ public class ItemFinder {
 
     // Gets a list of items as according to a query.
 
-    public void GetGalleryItems(Query query, final GalleryItemListener listener) {
-        query.limit(50).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    public void GetGalleryItems(final Query query, final GalleryItemListener listener) {
+        CollectionReference collection = firestore.collection("users");
+        collection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(final QuerySnapshot queryDocumentSnapshots) {
+                query.limit(50).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             ArrayList<GalleryItem> items = new ArrayList<>();
                             for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                                items.add(doc.toObject(GalleryItem.class));
+                                String userId = doc.get("uploaderId").toString();
+                                String username = "";
+                                for (DocumentSnapshot userDoc : queryDocumentSnapshots) {
+                                    String otherId = userDoc.get("userId").toString();
+                                    if (userId.equals(otherId)) {
+                                        username = userDoc.get("displayName").toString();
+                                        break;
+                                    }
+                                }
+                                GalleryItem item = new GalleryItem(doc.get("id").toString(), doc.get("title").toString(), doc.get("imageId").toString(),
+                                        doc.get("imageURL").toString(), userId, username, (Timestamp)doc.get("timestamp"));
+                                items.add(item);
                             }
                             listener.getResult(items);
                         }
                     }
                 });
+            }
+        });
     }
 
     // Retrieve the data for a single item.
@@ -199,7 +217,9 @@ public class ItemFinder {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 ArrayList<GalleryItem> items = new ArrayList<>();
                 for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                    items.add(doc.toObject(GalleryItem.class));
+                    GalleryItem item = new GalleryItem(doc.get("id").toString(), doc.get("title").toString(), doc.get("imageId").toString(),
+                            doc.get("imageURL").toString(), user.getUserId(), user.getDisplayName(), (Timestamp)doc.get("timestamp"));
+                    items.add(item);
                 }
                 listener.getResult(items);
             }

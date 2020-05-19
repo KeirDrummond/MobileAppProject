@@ -41,6 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textView.setText(items.get(position).getTitle());
+        holder.usernameTextView.setText(items.get(position).getUploaderName());
         Glide.with(context).load(items.get(position).getImageURL()).into(holder.imageView);
     }
 
@@ -52,12 +53,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView textView;
+        TextView usernameTextView;
         ImageView imageView;
         LinearLayout linearLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.title);
+            usernameTextView = itemView.findViewById(R.id.username);
             imageView = itemView.findViewById(R.id.thumbnail);
             linearLayout = itemView.findViewById(R.id.linearLayout);
             itemView.setOnClickListener(this);
