@@ -12,7 +12,8 @@
         android:layout_height="100dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:visibility="invisible">
+        android:visibility="visible"
+        android:background="#ccffff">
 
         <TextView
             android:id="@+id/username"
