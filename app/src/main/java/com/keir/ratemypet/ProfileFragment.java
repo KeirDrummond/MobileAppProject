@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ public class ProfileFragment extends Fragment {
 
     private UserAccount user;
     private RecyclerView recyclerView;
+    private ProgressBar loadingOverlay;
 
     TextView usernameDisplay;
     TextView uploadScoreDisplay;
@@ -42,6 +44,7 @@ public class ProfileFragment extends Fragment {
         ratingScoreDisplay = view.findViewById(R.id.ratingScore);
 
         recyclerView = view.findViewById(R.id.recycleView);
+        loadingOverlay = view.findViewById(R.id.loading);
 
         return view;
     }
@@ -69,6 +72,7 @@ public class ProfileFragment extends Fragment {
         uploadScoreDisplay.setText(Long.toString(user.getUploadScore()));
         ratingScoreDisplay.setText(Long.toString(user.getRatingScore()));
 
+        loadingOverlay.setVisibility(View.VISIBLE);
         ItemFinder.getInstance().getProfileItems(user, new GalleryItemListener() {
             @Override
             public void getResult(List<GalleryItem> items) {
@@ -78,6 +82,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void PopulateTable(List<GalleryItem> items) {
+        loadingOverlay.setVisibility(View.INVISIBLE);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(items, this.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

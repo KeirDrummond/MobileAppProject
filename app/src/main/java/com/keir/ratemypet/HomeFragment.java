@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
                     ((MainActivity) getActivity()).OpenItems(intent);
                 } else {
                     ((MainActivity) getActivity()).Loading(false);
-                    Toast toast = Toast.makeText(getContext(), "Unable to find unrated pets.", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getContext(), "Unable to find unrated pets.", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
