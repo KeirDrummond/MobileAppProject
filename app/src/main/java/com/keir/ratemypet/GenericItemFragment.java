@@ -529,6 +529,7 @@ public class GenericItemFragment extends ItemFragment {
             }).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    Session.getInstance().getCurrentUser().UpdateUser();
                     ((ItemViewActivity) getActivity()).Continue();
                 }
             }).addOnFailureListener(new OnFailureListener() {

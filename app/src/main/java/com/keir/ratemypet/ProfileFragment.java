@@ -19,10 +19,14 @@ public class ProfileFragment extends Fragment {
     private UserAccount user;
     private RecyclerView recyclerView;
 
-    public static ProfileFragment newInstance(UserAccount user) {
+    TextView usernameDisplay;
+    TextView uploadScoreDisplay;
+    TextView ratingScoreDisplay;
+
+    public static ProfileFragment newInstance(String userId) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
+        bundle.putString("userId", userId);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -33,19 +37,37 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        user = (UserAccount) getArguments().getSerializable("user");
-        TextView usernameDisplay = view.findViewById(R.id.profileUsername);
-        usernameDisplay.setText(user.getDisplayName());
-
-        TextView uploadScoreDisplay = view.findViewById(R.id.uploadScore);
-        uploadScoreDisplay.setText(Long.toString(user.getUploadScore()));
-
-        TextView ratingScoreDisplay = view.findViewById(R.id.ratingScore);
-        ratingScoreDisplay.setText(Long.toString(user.getRatingScore()));
-
-        ((MainActivity) getActivity()).TaskbarDisplay(true);
+        usernameDisplay = view.findViewById(R.id.profileUsername);
+        uploadScoreDisplay = view.findViewById(R.id.uploadScore);
+        ratingScoreDisplay = view.findViewById(R.id.ratingScore);
 
         recyclerView = view.findViewById(R.id.recycleView);
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        ((MainActivity) getActivity()).TaskbarDisplay(true);
+        String userId = getArguments().getString("userId");
+
+        ((MainActivity) getActivity()).Loading(true);
+        ItemFinder.getInstance().getUser(userId, new UserListener() {
+            @Override
+            public void getResult(UserAccount user) {
+                SetupProfile(user);
+                ((MainActivity) getActivity()).Loading(false);
+            }
+        });
+    }
+
+    private void SetupProfile(UserAccount user) {
+        this.user = user;
+        usernameDisplay.setText(user.getDisplayName());
+        uploadScoreDisplay.setText(Long.toString(user.getUploadScore()));
+        ratingScoreDisplay.setText(Long.toString(user.getRatingScore()));
 
         ItemFinder.getInstance().getProfileItems(user, new GalleryItemListener() {
             @Override
@@ -53,8 +75,6 @@ public class ProfileFragment extends Fragment {
                 PopulateTable(items);
             }
         });
-
-        return view;
     }
 
     private void PopulateTable(List<GalleryItem> items) {

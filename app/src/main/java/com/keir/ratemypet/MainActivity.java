@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new GalleryFragment();
                     break;
                 case R.id.nav_profile:
-                    selectedFragment = ProfileFragment.newInstance(Session.getInstance().getCurrentUser());
+                    selectedFragment = ProfileFragment.newInstance(Session.getInstance().getCurrentUser().getUserId());
                     break;
             }
             ChangeFragment(selectedFragment);

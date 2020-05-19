@@ -226,4 +226,14 @@ public class ItemFinder {
         });
     }
 
+    public void getUser(final String userId, final UserListener listener) {
+        firestore.collection("users").document(userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                UserAccount user = documentSnapshot.toObject(UserAccount.class);
+                listener.getResult(user);
+            }
+        });
+    }
+
 }

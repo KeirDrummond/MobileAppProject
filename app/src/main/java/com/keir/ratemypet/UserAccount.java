@@ -1,6 +1,9 @@
 package com.keir.ratemypet;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 
@@ -47,4 +50,19 @@ public class UserAccount implements Serializable {
     public long getUploadScore() { return uploadScore; }
 
     public long getUserLevel() { return userLevel; }
+
+    public void UpdateUser() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("users").document(this.userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                displayName = documentSnapshot.get("displayName").toString();
+                email = documentSnapshot.get("email").toString();
+                userLevel = documentSnapshot.getLong("userLevel");
+                userExp = documentSnapshot.getLong("userExp");
+                ratingScore = documentSnapshot.getLong("ratingScore");
+                uploadScore = documentSnapshot.getLong("uploadScore");
+            }
+        });
+    }
 }
