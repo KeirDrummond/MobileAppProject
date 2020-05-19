@@ -7,8 +7,7 @@
         android:layout_height="50dp"
         android:id="@+id/title"
         android:gravity="center"
-        android:text="Title"
-        android:textSize="30dp"/>
+        android:textSize="30sp"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -16,14 +15,15 @@
         android:id="@+id/image"
         android:layout_below="@+id/title"
         android:layout_above="@+id/totalScore"
-        android:background="#cccccc"/>
+        android:background="#cccccc"
+        android:contentDescription="@string/image" />
 
     <TextView
         android:id="@+id/totalScore"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@id/ratingLayout"
-        android:text="Total Score: -"
+        android:text="@string/total_score"
         android:textAlignment="center"/>
 
     <LinearLayout
@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_centerHorizontal="true"
+        android:baselineAligned="true"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -45,7 +46,6 @@
                 android:id="@+id/cuteRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
 
             <ImageButton
@@ -54,13 +54,13 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:src="@drawable/cute_icon"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/rate_as_cute" />
 
             <TextView
                 android:id="@+id/cuteScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -76,7 +76,6 @@
                 android:id="@+id/funnyRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
 
             <ImageButton
@@ -85,13 +84,13 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:src="@drawable/funny_icon"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/rate_as_funny" />
 
             <TextView
                 android:id="@+id/funnyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -106,7 +105,6 @@
                 android:id="@+id/interestingRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
 
             <ImageButton
@@ -115,13 +113,13 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:src="@drawable/interesting_icon"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/rate_as_interesting" />
 
             <TextView
                 android:id="@+id/interestingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -136,7 +134,6 @@
                 android:id="@+id/happyRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
 
             <ImageButton
@@ -145,13 +142,13 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:src="@drawable/happy_icon"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/rate_as_happy" />
 
             <TextView
                 android:id="@+id/happyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
         </LinearLayout>
 
@@ -166,7 +163,6 @@
                 android:id="@+id/surprisingRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
 
             <ImageButton
@@ -175,20 +171,20 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center"
                 android:src="@drawable/surprising_icon"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/rate_as_surprising" />
 
             <TextView
                 android:id="@+id/surprisingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:text="-"
                 android:textAlignment="center"/>
         </LinearLayout>
     </LinearLayout>
 
     <Button
         android:id="@+id/continueBtn"
-        android:text="Continue"
+        android:text="@string/itemContinue"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"

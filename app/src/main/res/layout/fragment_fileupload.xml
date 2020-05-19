@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="SELECT FILE"
+        android:text="@string/select_file"
         android:clickable="true"/>
 
     <ImageView
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar"
         android:layout_centerHorizontal="true"
-        android:text="UPLOAD"
+        android:text="@string/upload"
         android:clickable="true"/>
 
     <ProgressBar

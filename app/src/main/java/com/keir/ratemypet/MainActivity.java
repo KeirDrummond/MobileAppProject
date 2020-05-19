@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.nav_profile:
                     selectedFragment = ProfileFragment.newInstance(Session.getInstance().getCurrentUser().getUserId());
                     break;
+                case R.id.nav_upload:
+                    selectedFragment = new FileUploadFragment();
+                    break;
             }
             ChangeFragment(selectedFragment);
             return true;

@@ -18,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -36,14 +35,6 @@ public class HomeFragment extends Fragment {
         googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
         ((MainActivity) getActivity()).TaskbarDisplay(true);
-
-        Button uploadBtn = view.findViewById(R.id.uploadbtn);
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity) getActivity()).ChangeFragment(new FileUploadFragment());
-            }
-        });
 
         Button button = view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {

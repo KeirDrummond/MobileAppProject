@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Rate My Pet</string>
+    <string name="main">Main</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="my_profile">My Profile</string>
+    <string name="username">Username</string>
+    <string name="select_file">Select file</string>
+    <string name="image">Image</string>
+    <string name="total_score">Total Score: -</string>
+    <string name="rate_as_cute">Rate as Cute</string>
+    <string name="rate_as_funny">Rate as Funny</string>
+    <string name="rate_as_interesting">Rate as Interesting</string>
+    <string name="rate_as_happy">Rate as Happy</string>
+    <string name="rate_as_surprising">Rate as Surprising</string>
+    <string name="itemContinue">Continue</string>
+    <string name="rate_some_pets">Rate some pets</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete">Delete</string>
+    <string name="cute_rating">Cute Rating</string>
+    <string name="funny_rating">Funny Rating</string>
+    <string name="interesting_rating">Interesting Rating</string>
+    <string name="happy_rating">Happy Rating</string>
+    <string name="surprising_rating">Surprising Rating</string>
+    <string name="upload_score">Upload Score</string>
+    <string name="rating_score">Rating Score</string>
+    <string name="thumbnail">Thumbnail</string>
 </resources>
