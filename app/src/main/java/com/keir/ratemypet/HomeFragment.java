@@ -31,7 +31,6 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    GoogleSignInClient googleSignInClient;
     LinearLayout itemLayout;
     ProgressBar loadingOverlay;
 
@@ -39,11 +38,6 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(getContext(), googleSignInOptions);
 
         itemLayout = view.findViewById(R.id.itemLayout);
         loadingOverlay = view.findViewById(R.id.loading);
@@ -55,15 +49,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 OpenItemActivity();
-            }
-        });
-
-        Button signOutButton = view.findViewById(R.id.signOut);
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                googleSignInClient.signOut();
-                FirebaseAuth.getInstance().signOut();
             }
         });
 
