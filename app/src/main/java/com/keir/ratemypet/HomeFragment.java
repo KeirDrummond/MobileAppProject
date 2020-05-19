@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
 
         loadingOverlay.setVisibility(View.VISIBLE);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        Query query = firestore.collection("images").orderBy("totalScore").limit(2);
+        Query query = firestore.collection("images").orderBy("totalScore", Query.Direction.DESCENDING).limit(2);
         ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
             @Override
             public void getResult(List<GalleryItem> items) {
