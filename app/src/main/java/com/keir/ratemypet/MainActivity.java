@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void UserDisplay(boolean state) {
-        LinearLayout userDisplayLayout = findViewById(R.id.userDisplay);
+        RelativeLayout userDisplayLayout = findViewById(R.id.userDisplay);
         TextView usernameText = findViewById(R.id.username);
         if (state) {
             userDisplayLayout.setVisibility(View.VISIBLE);

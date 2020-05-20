@@ -29,12 +29,11 @@
 
         <TextView
             android:id="@+id/profileUsername"
-            android:layout_width="100dp"
+            android:layout_width="130dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:autoSizeTextType="uniform"
-            android:maxLines="1"
+            android:textSize="25sp"
             android:textAlignment="center" />
 
         <TextView

@@ -6,14 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/signOut"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:text="@string/sign_out"
-        android:layout_alignParentEnd="true"/>
-
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/userDisplay"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -25,12 +18,22 @@
         <TextView
             android:id="@+id/username"
             android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
             android:textAlignment="center"
-            android:autoSizeTextType="uniform"/>
+            android:layout_gravity="center" />
 
-    </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/signOut"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:text="@string/sign_out" />
 
     <RelativeLayout
         android:layout_width="match_parent"

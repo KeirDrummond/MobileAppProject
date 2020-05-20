@@ -27,4 +27,7 @@
     <string name="thumbnail">Thumbnail</string>
     <string name="title">Title</string>
     <string name="top_images">Top Images</string>
+    <string name="ci360_mobile_application_development">CI360 - Mobile Application Development</string>
+    <string name="keir_drummond">Keir Drummond</string>
+    <string name="rate_my_pet">Rate My Pet</string>
 </resources>
