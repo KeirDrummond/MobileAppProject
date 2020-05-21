@@ -3,6 +3,7 @@ package com.keir.ratemypet;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,12 +49,33 @@ public class SignInActivity extends AppCompatActivity {
                 SignIn();
             }
         });
+
+        Button anonSignIn = findViewById(R.id.anonSignIn);
+        anonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AnonSignIn();
+            }
+        });
     }
 
     private void SignIn()
     {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void AnonSignIn()
+    {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    CompleteSignIn();
+                }
+            }
+        });
     }
 
     private void CompleteSignIn() {

@@ -18,6 +18,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
+    <Button
+        android:id="@+id/anonSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Sign_in_btn"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/anonymous_sign_in"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

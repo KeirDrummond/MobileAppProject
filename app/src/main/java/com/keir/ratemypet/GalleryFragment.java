@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import java.util.List;
 
 public class GalleryFragment extends Fragment {
 
+    private SearchView searchView;
+    RecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
     private ProgressBar loadingOverlay;
 
@@ -29,10 +32,11 @@ public class GalleryFragment extends Fragment {
 
         ((MainActivity) getActivity()).TaskbarDisplay(true);
 
+        searchView = (SearchView) view.findViewById(R.id.search_bar);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycleitems);
         loadingOverlay = (ProgressBar) view.findViewById(R.id.loading);
 
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         loadingOverlay.setVisibility(View.VISIBLE);
         Query query = firestore.collection("images").limit(50);
         ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
@@ -42,12 +46,34 @@ public class GalleryFragment extends Fragment {
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                String search = searchView.getQuery().toString().trim();
+                Query query = firestore.collection("images").whereEqualTo("title", search);
+                loadingOverlay.setVisibility(View.VISIBLE);
+                if (adapter != null) { adapter.clearList(); }
+                ItemFinder.getInstance().GetGalleryItems(query, new GalleryItemListener() {
+                    @Override
+                    public void getResult(List<GalleryItem> items) {
+                        PopulateTable(items);
+                    }
+                });
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
         return view;
     }
 
     private void PopulateTable(List<GalleryItem> itemList) {
         loadingOverlay.setVisibility(View.INVISIBLE);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(itemList, this.getContext());
+        adapter = new RecyclerViewAdapter(itemList, this.getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }

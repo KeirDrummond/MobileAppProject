@@ -56,8 +56,12 @@ public class UserAccount implements Serializable {
         firestore.collection("users").document(this.userId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                displayName = documentSnapshot.get("displayName").toString();
-                email = documentSnapshot.get("email").toString();
+                if (documentSnapshot.get("displayName") != null) {
+                    displayName = documentSnapshot.get("displayName").toString();
+                }
+                if (documentSnapshot.get("email") != null) {
+                    email = documentSnapshot.get("email").toString();
+                }
                 userLevel = documentSnapshot.getLong("userLevel");
                 userExp = documentSnapshot.getLong("userExp");
                 ratingScore = documentSnapshot.getLong("ratingScore");

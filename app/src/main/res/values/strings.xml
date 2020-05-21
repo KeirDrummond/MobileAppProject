@@ -30,4 +30,5 @@
     <string name="ci360_mobile_application_development">CI360 - Mobile Application Development</string>
     <string name="keir_drummond">Keir Drummond</string>
     <string name="rate_my_pet">Rate My Pet</string>
+    <string name="anonymous_sign_in">Anonymous Sign in</string>
 </resources>

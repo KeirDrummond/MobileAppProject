@@ -30,6 +30,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
     }
 
+    public void clearList() {
+        int size = items.size();
+        items.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
