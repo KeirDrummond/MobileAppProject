@@ -75,18 +75,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void FillFrame(FrameLayout frame, final GalleryItem item, LayoutInflater inflater, ViewGroup container) {
-        View itemView = inflater.inflate(R.layout.gallery_item, container, false);
+        View itemView = inflater.inflate(R.layout.home_item, container, false);
 
         ViewGroup.LayoutParams params = itemView.getLayoutParams();
         params.height = ActionBar.LayoutParams.MATCH_PARENT;
         itemView.setLayoutParams(params);
 
         ImageView thumbnail = itemView.findViewById(R.id.thumbnail);
-        TextView title = itemView.findViewById(R.id.title);
-        TextView user = itemView.findViewById(R.id.username);
         Glide.with(getContext()).load(item.getImageURL()).into(thumbnail);
-        title.setText(item.getTitle());
-        user.setText(item.getUploaderName());
         frame.addView(itemView);
 
         itemView.setOnClickListener(new View.OnClickListener() {
