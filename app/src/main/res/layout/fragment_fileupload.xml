@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <Button
         android:id="@+id/fileSelectBtn"
@@ -8,17 +10,20 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/select_file"
+        android:layout_marginBottom="30dp"
+        android:layout_above="@id/titleInputBox"
         android:clickable="true"/>
 
     <ImageView
         android:id="@+id/imagePreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/fileSelectBtn"
-        android:layout_above="@+id/titleInputBox"
+        android:layout_above="@+id/fileSelectBtn"
         android:layout_centerHorizontal="true"
-        android:layout_margin="30dp"
-        android:contentDescription="@string/image" />
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="@string/image"
+        tools:src="@drawable/ic_photo_library_black_24dp"/>
 
     <EditText
         android:id="@+id/titleInputBox"
@@ -46,6 +51,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:progress="0"/>
+        android:progress="0"
+        tools:progress="50"/>
 
 </RelativeLayout>

@@ -26,42 +26,34 @@ import java.util.HashMap;
 
 public class GenericItemFragment extends ItemFragment {
 
-    GalleryItem item;
+    private GalleryItem item;
 
-    TextView cuteRating;
-    TextView funnyRating;
-    TextView interestingRating;
-    TextView happyRating;
-    TextView surprisingRating;
+    private TextView cuteRating;
+    private TextView funnyRating;
+    private TextView interestingRating;
+    private TextView happyRating;
+    private TextView surprisingRating;
 
-    ImageButton cuteBtn;
-    ImageButton funnyBtn;
-    ImageButton interestingBtn;
-    ImageButton happyBtn;
-    ImageButton surprisingBtn;
+    private long cuteScore;
+    private long funnyScore;
+    private long interestingScore;
+    private long happyScore;
+    private long surprisingScore;
+    private long totalScore;
 
-    long cuteScore;
-    long funnyScore;
-    long interestingScore;
-    long happyScore;
-    long surprisingScore;
-    long totalScore;
+    private TextView cuteScoreText;
+    private TextView funnyScoreText;
+    private TextView interestingScoreText;
+    private TextView happyScoreText;
+    private TextView surprisingScoreText;
+    private TextView totalScoreText;
 
-    TextView cuteScoreText;
-    TextView funnyScoreText;
-    TextView interestingScoreText;
-    TextView happyScoreText;
-    TextView surprisingScoreText;
-    TextView totalScoreText;
+    private Rating currentRating;
+    private Rating newRating;
 
-    Button continueBtn;
-
-    Rating currentRating;
-    Rating newRating;
-
-    int firstValue = 8;
-    int secondValue = 5;
-    int thirdValue = 2;
+    private int firstValue = 8;
+    private int secondValue = 5;
+    private int thirdValue = 2;
 
     public static GenericItemFragment newInstance(GalleryItem item, Rating currentRating) {
         GenericItemFragment fragment = new GenericItemFragment();
@@ -94,11 +86,11 @@ public class GenericItemFragment extends ItemFragment {
         happyRating = view.findViewById(R.id.happyRating);
         surprisingRating = view.findViewById(R.id.surprisingRating);
 
-        cuteBtn = view.findViewById(R.id.cuteBtn);
-        funnyBtn = view.findViewById(R.id.funnyBtn);
-        interestingBtn = view.findViewById(R.id.interestingBtn);
-        happyBtn = view.findViewById(R.id.happyBtn);
-        surprisingBtn = view.findViewById(R.id.surprisingBtn);
+        ImageButton cuteBtn = view.findViewById(R.id.cuteBtn);
+        ImageButton funnyBtn = view.findViewById(R.id.funnyBtn);
+        ImageButton interestingBtn = view.findViewById(R.id.interestingBtn);
+        ImageButton happyBtn = view.findViewById(R.id.happyBtn);
+        ImageButton surprisingBtn = view.findViewById(R.id.surprisingBtn);
 
         cuteScoreText = view.findViewById(R.id.cuteScore);
         funnyScoreText = view.findViewById(R.id.funnyScore);
@@ -120,7 +112,7 @@ public class GenericItemFragment extends ItemFragment {
         if (currentRating.happyScore == 1) { happyScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.happyScore == 2) { happyScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.happyScore == 3) { happyScore -= thirdValue; totalScore -= thirdValue * 2; }
         if (currentRating.surprisingScore == 1) { surprisingScore -= firstValue; totalScore -= firstValue * 2; } else if (currentRating.surprisingScore == 2) { surprisingScore -= secondValue; totalScore -= secondValue * 2; } else if (currentRating.surprisingScore == 3) { surprisingScore -= thirdValue; totalScore -= thirdValue * 2; }
 
-        continueBtn = view.findViewById(R.id.continueBtn);
+        Button continueBtn = view.findViewById(R.id.continueBtn);
 
         cuteBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/profileLayout"
@@ -27,7 +29,8 @@
             android:layout_below="@+id/uploadText"
             android:textSize="25sp"
             android:gravity="center"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            tools:text="-" />
 
         <TextView
             android:id="@+id/profileUsername"
@@ -57,7 +60,8 @@
             android:layout_below="@+id/ratingText"
             android:textSize="25sp"
             android:gravity="center"
-            android:textAlignment="center"/>
+            android:textAlignment="center"
+            tools:text="-" />
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

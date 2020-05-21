@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="match_parent"
@@ -23,14 +25,16 @@
         android:layout_below="@+id/deleteBtn"
         android:layout_above="@+id/totalScore"
         android:background="#cccccc"
-        android:contentDescription="@string/image" />
+        android:contentDescription="@string/image"
+        tools:src="@drawable/ic_photo_library_black_24dp"/>
 
     <TextView
         android:id="@+id/totalScore"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@id/ratingLayout"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        tools:text="Total Score: -"/>
 
     <LinearLayout
         android:id="@+id/ratingLayout"
@@ -61,7 +65,8 @@
                 android:id="@+id/cuteScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +89,8 @@
                 android:id="@+id/funnyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,7 +113,8 @@
                 android:id="@+id/interestingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -130,7 +137,8 @@
                 android:id="@+id/happyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -153,7 +161,8 @@
                 android:id="@+id/surprisingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
     </LinearLayout>
 

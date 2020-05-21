@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="match_parent"
@@ -16,21 +18,22 @@
         android:layout_below="@+id/title"
         android:layout_above="@+id/totalScore"
         android:background="#cccccc"
-        android:contentDescription="@string/image" />
+        android:contentDescription="@string/image"
+        tools:src="@drawable/ic_photo_library_black_24dp"/>
 
     <TextView
         android:id="@+id/totalScore"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_above="@id/ratingLayout"
-        android:text="@string/total_score"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        tools:text="Total Score: -"/>
 
     <LinearLayout
         android:id="@+id/ratingLayout"
         android:layout_above="@+id/continueBtn"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:baselineAligned="true"
         android:orientation="horizontal">
@@ -46,7 +49,8 @@
                 android:id="@+id/cuteRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
 
             <ImageButton
                 android:id="@+id/cuteBtn"
@@ -61,7 +65,8 @@
                 android:id="@+id/cuteScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-"/>
         </LinearLayout>
 
 
@@ -76,7 +81,8 @@
                 android:id="@+id/funnyRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
 
             <ImageButton
                 android:id="@+id/funnyBtn"
@@ -91,7 +97,8 @@
                 android:id="@+id/funnyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -105,7 +112,8 @@
                 android:id="@+id/interestingRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
 
             <ImageButton
                 android:id="@+id/interestingBtn"
@@ -120,7 +128,8 @@
                 android:id="@+id/interestingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -134,7 +143,8 @@
                 android:id="@+id/happyRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
 
             <ImageButton
                 android:id="@+id/happyBtn"
@@ -149,7 +159,8 @@
                 android:id="@+id/happyScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
 
         <LinearLayout
@@ -163,7 +174,8 @@
                 android:id="@+id/surprisingRating"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
 
             <ImageButton
                 android:id="@+id/surprisingBtn"
@@ -178,7 +190,8 @@
                 android:id="@+id/surprisingScore"
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                tools:text="-" />
         </LinearLayout>
     </LinearLayout>
 
